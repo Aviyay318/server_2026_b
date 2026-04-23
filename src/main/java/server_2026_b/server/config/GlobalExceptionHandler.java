@@ -1,4 +1,4 @@
-package server_2026_b.server;
+package server_2026_b.server.config;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

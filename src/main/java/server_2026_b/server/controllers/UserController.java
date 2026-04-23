@@ -2,6 +2,7 @@ package server_2026_b.server.controllers;
 
 import server_2026_b.server.entities.User;
 import server_2026_b.server.responses.BasicResponse;
+import server_2026_b.server.dto.UserDto;
 import server_2026_b.server.service.Persist;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,8 @@ public class UserController {
     }
 
     @PostMapping
-    public BasicResponse createUser(@RequestBody User user) {
+    public BasicResponse createUser(@RequestBody UserDto userDto) {
+        User user = new User(userDto.getUsername(), userDto.getPassword(), userDto.getRoleType());
         persist.save(user);
         return new BasicResponse(true, 0);
     }

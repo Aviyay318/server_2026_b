@@ -1,4 +1,4 @@
-package server_2026_b.server;
+package server_2026_b.server.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.context.annotation.Bean;
