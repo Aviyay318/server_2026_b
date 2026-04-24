@@ -2,12 +2,5 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="server_2026_b.server.entities.User" table="users">
-        <id name="id" column="id" type="long">
-            <generator class="identity"/>
-        </id>
-        <property name="username" column="username" type="string" not-null="true"/>
-        <property name="password" column="password" type="string"/>
-        <property name="roleType" column="role_type" type="string"/>
-    </class>
+
 </hibernate-mapping>

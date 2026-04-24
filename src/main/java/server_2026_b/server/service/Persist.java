@@ -1,6 +1,5 @@
 package server_2026_b.server.service;
 
-import server_2026_b.server.entities.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
@@ -46,11 +45,5 @@ public class Persist {
                 .createQuery("FROM " + clazz.getSimpleName()).list();
     }
 
-    public List<User> getUserByUsernameAndPassword(String username, String password) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM User WHERE username = :username AND password = :password", User.class)
-                .setParameter("username", username)
-                .setParameter("password", password)
-                .list();
-    }
+
 }
