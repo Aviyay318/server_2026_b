@@ -2,5 +2,31 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
+    <class name="server_2026_b.server.entities.Employer" table="employers">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
 
+        <property name="username" column="username" type="string" not-null="true"/>
+        <property name="password" column="password" type="string" not-null="true"/>
+        <property name="businessName" column="business_name" type="string"/>
+        <property name="phone" column="phone" type="string"/>
+    </class>
+
+
+    <class name="server_2026_b.server.entities.AuthToken" table="authToken">
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+        <property name="token" column="token" type="string" not-null="true"/>
+        <property name="userId" column="user_id" type="long" not-null="true"/>
+        <property name="userType" column="user_type" not-null="true">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.UserType</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="createdAt" column="created_at" type="java.time.LocalDateTime"/>
+        <property name="expiresAt" column="expires_at" type="java.time.LocalDateTime" not-null="true"/>
+    </class>
 </hibernate-mapping>
