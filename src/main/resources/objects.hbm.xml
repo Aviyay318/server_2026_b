@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
 <hibernate-mapping>
     <class name="server_2026_b.server.entities.Employer" table="employers">
         <id name="id" column="id" type="long">
             <generator class="identity"/>
         </id>
-
         <property name="username" column="username" type="string" not-null="true"/>
         <property name="password" column="password" type="string" not-null="true"/>
         <property name="businessName" column="business_name" type="string"/>
         <property name="phone" column="phone" type="string"/>
     </class>
 
+    <class name="server_2026_b.server.entities.Employee" table="employees">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="username" column="username" type="string" not-null="true"/>
+        <property name="firstName" column="first_name" type="string"/>
+        <property name="lastName" column="last_name" type="string"/>
+        <property name="password" column="password" type="string" not-null="true"/>
+        <property name="phone" column="phone" type="string"/>
+        <property name="email" column="email" type="string"/>
+    </class>
 
     <class name="server_2026_b.server.entities.AuthToken" table="authToken">
         <id name="id" column="id" type="java.lang.Long">
