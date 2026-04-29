@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.Employee;
 import server_2026_b.server.entities.Employer;
+import server_2026_b.server.entities.WorkDay;
 
 import java.util.List;
 
