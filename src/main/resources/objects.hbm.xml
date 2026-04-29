@@ -3,4 +3,20 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
+    <class name="server_2026_b.server.entities.WorkDay" table="work_day">
+
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+
+        <property name="userId" column="user_id" type="java.lang.Long" not-null="true"/>
+
+        <property name="enterTime" column="enter_time" type="timestamp"/>
+
+        <property name="exitTime" column="exit_time" type="timestamp"/>
+
+        <property name="location" column="location" type="string"/>
+
+    </class>
+
 </hibernate-mapping>
