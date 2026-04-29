@@ -20,6 +20,13 @@ public class WorkDay {
         this.location = location;
     }
 
+    public WorkDay(Long userId, Date enterTime, String location) {
+        this.userId = userId;
+        this.enterTime = enterTime;
+        this.exitTime = exitTime;
+        this.location = location;
+    }
+
     public Long getId() {
         return id;
     }

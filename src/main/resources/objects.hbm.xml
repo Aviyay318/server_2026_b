@@ -40,19 +40,23 @@
         <property name="expiresAt" column="expires_at" type="java.time.LocalDateTime" not-null="true"/>
     </class>
 
-    <class name="server_2026_b.server.entities.WorkDay" table="work_day">
+    <class name="server_2026_b.server.entities.WorkingSite" table="working_sites">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="name" type="string" not-null="true"/>
+        <property name="address" column="address" type="string"/>
+        <property name="longitude" column="longitude" type="double"/>
+        <property name="latitude" column="latitude" type="double"/>
+    </class>
 
+    <class name="server_2026_b.server.entities.WorkDay" table="work_day">
         <id name="id" column="id" type="java.lang.Long">
             <generator class="identity"/>
         </id>
-
         <property name="userId" column="user_id" type="java.lang.Long" not-null="true"/>
-
         <property name="enterTime" column="enter_time" type="timestamp"/>
-
         <property name="exitTime" column="exit_time" type="timestamp"/>
-
         <property name="location" column="location" type="string"/>
-
     </class>
 </hibernate-mapping>

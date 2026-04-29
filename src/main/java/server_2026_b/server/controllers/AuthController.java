@@ -12,8 +12,6 @@ import server_2026_b.server.service.AuthService;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
-
     private final AuthService authService;
 
     public AuthController(AuthService authService) {

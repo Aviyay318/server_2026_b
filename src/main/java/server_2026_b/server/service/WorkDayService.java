@@ -17,7 +17,6 @@ import java.util.List;
 
 @Service
 public class WorkDayService {
-    // TODO: לקונטרולר PERSIST להביא את כל המידע הרלוונטי מ
     private final Persist persist;
     private final TokenService tokenService;
     private final WorkDayRepository workDayRepository;
