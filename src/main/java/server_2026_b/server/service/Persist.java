@@ -4,6 +4,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import server_2026_b.server.entities.Employee;
+import server_2026_b.server.entities.Employer;
 
 import java.util.List;
 
@@ -45,5 +47,26 @@ public class Persist {
                 .createQuery("FROM " + clazz.getSimpleName()).list();
     }
 
+    public Employee getEmployeeByUsernameAndPassword(String username, String password) {
+        return getQuerySession()
+                .createQuery(
+                        "FROM Employee WHERE username = :username AND password = :password",
+                        Employee.class
+                )
+                .setParameter("username", username)
+                .setParameter("password", password)
+                .uniqueResult();
+    }
+
+    public Employer getEmployerByUsernameAndPassword(String username, String password) {
+        return getQuerySession()
+                .createQuery(
+                        "FROM Employer WHERE username = :username AND password = :password",
+                        Employer.class
+                )
+                .setParameter("username", username)
+                .setParameter("password", password)
+                .uniqueResult();
+    }
 
 }

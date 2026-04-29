@@ -1,11 +1,13 @@
 package server_2026_b.server.responses;
 
+import server_2026_b.server.utils.UserType;
+
 public class ResponseDto extends BasicResponse {
     private String message;
     private String token;
-    private String userType;
+    private UserType userType;
 
-    public ResponseDto(Integer errorCode,boolean success,String message, String token, String userType) {
+    public ResponseDto(Integer errorCode,boolean success,String message, String token, UserType userType) {
         super(success, errorCode);
         this.message = message;
         this.token = token;
@@ -22,12 +24,12 @@ public class ResponseDto extends BasicResponse {
         return token;
     }
     public void setToken(String token) {
-        this.token = token; 
+        this.token = token;
     }
-    public String getUserType() {
+    public UserType getUserType() {
         return userType;
     }
-    public void setUserType(String userType) {
+    public void setUserType(UserType userType) {
         this.userType = userType;
     }
 }
