@@ -9,8 +9,4 @@ public class Errors {
 
     public static final int ERROR_EMPLOYEE_ALREADY_WORKING = 4000;
     public static final int ERROR_EMPLOYEE_NOT_WORKING = 4001;
-
-
-
-
 }

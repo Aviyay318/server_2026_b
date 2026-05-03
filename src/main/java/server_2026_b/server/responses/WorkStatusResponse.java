@@ -1,8 +1,11 @@
 package server_2026_b.server.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 public class WorkStatusResponse extends BasicResponse{
+    @JsonProperty("isWorking")
     private boolean isWorking;
     private Date startTime;
 
@@ -12,7 +15,7 @@ public class WorkStatusResponse extends BasicResponse{
         this.startTime = startTime;
     }
 
-    public boolean isWorking() {
+    public boolean getIsWorking() {
         return isWorking;
     }
 
