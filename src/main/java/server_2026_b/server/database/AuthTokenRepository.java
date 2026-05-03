@@ -1,6 +1,7 @@
 package server_2026_b.server.database;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.AuthToken;
 import server_2026_b.server.service.Persist;
 
@@ -13,6 +14,7 @@ public class AuthTokenRepository {
         this.persist = persist;
     }
 
+    @Transactional
     public AuthToken findByToken(String token) {
         return persist.getQuerySession()
                 .createQuery("FROM AuthToken WHERE token = :token", AuthToken.class)

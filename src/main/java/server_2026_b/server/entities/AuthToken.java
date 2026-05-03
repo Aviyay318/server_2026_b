@@ -11,6 +11,9 @@ public class AuthToken {
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
 
+    public AuthToken() {
+    }
+
     public AuthToken(String token, Long userId, UserType userType,
                      LocalDateTime createdAt, LocalDateTime expiresAt) {
         this.token = token;

@@ -1,6 +1,7 @@
 package server_2026_b.server.database;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.WorkDay;
 import server_2026_b.server.service.Persist;
 
@@ -20,7 +21,7 @@ public class WorkDayRepository {
         persist.save(workDay);
     }
 
-
+    @Transactional
     public WorkDay findOpenByUserId(Long userId) {
         return persist.getQuerySession()
                 .createQuery(
@@ -32,6 +33,7 @@ public class WorkDayRepository {
                 .uniqueResult();
     }
 
+    @Transactional
     public List<WorkDay> findAllByUserId(Long userId) {
         return persist.getQuerySession()
                 .createQuery(
