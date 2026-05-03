@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import server_2026_b.server.requests.LoginRequest;
 import server_2026_b.server.responses.LoginResponse;
 import server_2026_b.server.service.AuthService;
+import server_2026_b.server.utils.GenerateHash;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,8 +30,8 @@ public class AuthController {
     @PostMapping("/loginEmployer")
     public LoginResponse loginEmployer(@RequestBody LoginRequest request){
         // סיסמה לרישום מנהלים
-//        String hashedPassword = GenerateHash.hashMd5(request.getUsername(), request.getPassword());
-//        System.out.println("the password: " + hashedPassword);
+        String hashedPassword = GenerateHash.hashMd5(request.getUsername(), request.getPassword());
+        System.out.println("the password: " + hashedPassword);
         return authService.loginEmployer(request.getUsername(), request.getPassword());
     }
 

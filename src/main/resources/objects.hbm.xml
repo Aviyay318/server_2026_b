@@ -2,17 +2,9 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="server_2026_b.server.entities.Employer" table="employers">
-        <id name="id" column="id" type="long">
-            <generator class="identity"/>
-        </id>
-        <property name="username" column="username" type="string" not-null="true"/>
-        <property name="password" column="password" type="string" not-null="true"/>
-        <property name="businessName" column="business_name" type="string"/>
-        <property name="phone" column="phone" type="string"/>
-    </class>
 
-    <class name="server_2026_b.server.entities.Employee" table="employees">
+
+    <class name="server_2026_b.server.entities.User" table="users">
         <id name="id" column="id" type="long">
             <generator class="identity"/>
         </id>
@@ -22,23 +14,58 @@
         <property name="password" column="password" type="string" not-null="true"/>
         <property name="phone" column="phone" type="string"/>
         <property name="email" column="email" type="string"/>
-    </class>
 
-    <class name="server_2026_b.server.entities.AuthToken" table="authToken">
-        <id name="id" column="id" type="java.lang.Long">
-            <generator class="identity"/>
-        </id>
-        <property name="token" column="token" type="string" not-null="true"/>
-        <property name="userId" column="user_id" type="long" not-null="true"/>
         <property name="userType" column="user_type" not-null="true">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">server_2026_b.server.utils.UserType</param>
                 <param name="useNamed">true</param>
             </type>
         </property>
-        <property name="createdAt" column="created_at" type="java.time.LocalDateTime"/>
+
+        <joined-subclass name="server_2026_b.server.entities.Employer" table="employers">
+            <key column="user_id"/>
+        </joined-subclass>
+
+        <joined-subclass name="server_2026_b.server.entities.Employee" table="employees">
+            <key column="user_id"/>
+        </joined-subclass>
+    </class>
+
+
+    <class name="server_2026_b.server.entities.relations.EmploymentRelation"
+           table="employment_relations">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="employer"
+                     class="server_2026_b.server.entities.Employer"
+                     column="employer_id"
+                     not-null="true"
+                     unique-key="uk_employer_employee"/>
+        <many-to-one name="employee"
+                     class="server_2026_b.server.entities.Employee"
+                     column="employee_id"
+                     not-null="true"
+                     unique-key="uk_employer_employee"/>
+    </class>
+
+
+    <class name="server_2026_b.server.entities.RefreshToken" table="refresh_token">
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+        <property name="token" column="token" type="string" not-null="true" unique="true"/>
+        <property name="userId" column="user_id" type="java.lang.Long" not-null="true" unique="true"/>
+        <property name="userType" column="user_type" not-null="true">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.UserType</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="createdAt" column="created_at" type="java.time.LocalDateTime" not-null="true"/>
         <property name="expiresAt" column="expires_at" type="java.time.LocalDateTime" not-null="true"/>
     </class>
+
 
     <class name="server_2026_b.server.entities.WorkingSite" table="working_sites">
         <id name="id" column="id" type="long">
