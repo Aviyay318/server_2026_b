@@ -1,8 +1,9 @@
 package server_2026_b.server.service;
 
 import org.springframework.stereotype.Service;
+import server_2026_b.server.database.UserRepository;
 import server_2026_b.server.database.WorkDayRepository;
-import server_2026_b.server.entities.AuthToken;
+import server_2026_b.server.entities.RefreshToken;
 import server_2026_b.server.entities.Employee;
 import server_2026_b.server.entities.WorkDay;
 import server_2026_b.server.requests.EnterRequest;
@@ -17,25 +18,28 @@ import java.util.List;
 
 @Service
 public class WorkDayService {
-    private final Persist persist;
     private final TokenService tokenService;
     private final WorkDayRepository workDayRepository;
+   private final UserService userService;
 
-    public WorkDayService(Persist persist, TokenService tokenService, WorkDayRepository workDayRepository) {
-        this.persist = persist;
+    public WorkDayService(Persist persist, TokenService tokenService, WorkDayRepository workDayRepository, UserService userService) {
         this.tokenService = tokenService;
         this.workDayRepository = workDayRepository;
+        this.userService =userService;
+
     }
 
     public Employee getEmployeeByToken(String token){
-        AuthToken authToken = tokenService.getValidToken(token);
-        if(authToken == null){
-            return null;
-        }
-        if(authToken.getUserType() != UserType.EMPLOYEE){
-            return null;
-        }
-        return persist.loadObject(Employee.class, authToken.getUserId());
+//        Long userId = tokenService.getUserIdFromAccessToken(token);
+//        UserType userType = tokenService.getUserTypeFromAccessToken(token);
+//
+//        if (userId == null || userType == null) {
+//            return null;
+//        }
+//        if (userType != UserType.EMPLOYEE) {
+//            return null;
+//        }
+        return userService.getEmployeeByAccessToken(token);
     }
 
     public BasicResponse enter(EnterRequest request){

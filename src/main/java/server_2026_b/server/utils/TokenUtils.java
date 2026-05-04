@@ -1,43 +1,45 @@
 package server_2026_b.server.utils;
 
-import server_2026_b.server.entities.AuthToken;
+import server_2026_b.server.entities.RefreshToken;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.UUID;
-import static server_2026_b.server.utils.Constants.TOKEN_VALID_HOURS;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class TokenUtils {
 
-    private TokenUtils(){}
-
-
-    public static AuthToken createToken (Long userId, UserType userType){
-        LocalDateTime now = LocalDateTime.now();
-        String token = UUID.randomUUID().toString();
-        return new AuthToken(token, userId, userType,
-                now, now.plusHours(TOKEN_VALID_HOURS));
-    }
-
-
-    public static  boolean isExpired(AuthToken authToken) {
-        if (authToken == null || authToken.getExpiresAt() == null) {
-            return true;
-        }
-        return LocalDateTime.now().isAfter(authToken.getExpiresAt());
-    }
-
-
-    public static boolean isValid(AuthToken authToken) {
-        if (authToken == null) {
-            return false;
-        }
-        if (!isTokenTextValid(authToken.getToken())) {
-            return false;
-        }
-        return !isExpired(authToken);
+    private TokenUtils() {
     }
 
     public static boolean isTokenTextValid(String token) {
         return token != null && !token.isBlank();
+    }
+
+    public static boolean isExpired(RefreshToken refreshToken) {
+        if (refreshToken == null || refreshToken.getExpiresAt() == null) {
+            return true;
+        }
+
+        return LocalDateTime.now().isAfter(refreshToken.getExpiresAt());
+    }
+
+    public static boolean isValid(RefreshToken refreshToken) {
+        if (refreshToken == null) {
+            return false;
+        }
+
+        if (!isTokenTextValid(refreshToken.getToken())) {
+            return false;
+        }
+
+        return !isExpired(refreshToken);
+    }
+
+    public static LocalDateTime toLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(date.getTime()),
+                ZoneId.systemDefault()
+        );
     }
 }
