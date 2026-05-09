@@ -36,4 +36,10 @@ public class WorkDayController {
     public WorkListResponse getAllWorkList(@RequestHeader("Authorization") String token) {
         return workDayService.getAllWorkList(token);
     }
+
+    @GetMapping("/sites")
+    public BasicResponse getAllSites(){
+        // TODO: return the list of Working sites
+        return new BasicResponse();
+    }
 }

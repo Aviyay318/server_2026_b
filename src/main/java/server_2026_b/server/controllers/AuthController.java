@@ -1,11 +1,9 @@
 package server_2026_b.server.controllers;
 
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server_2026_b.server.requests.LoginRequest;
+import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.LoginResponse;
 import server_2026_b.server.service.AuthService;
 import server_2026_b.server.utils.GenerateHash;
@@ -22,8 +20,8 @@ public class AuthController {
     @PostMapping("/loginEmployee")
     public LoginResponse loginEmployee(@RequestBody LoginRequest request) {
         // סיסמה לרישום עובדים
-//        String hashedPassword = GenerateHash.hashMd5(request.getUsername(), request.getPassword());
-//        System.out.println("the password: " + hashedPassword);
+        String hashedPassword = GenerateHash.hashMd5(request.getUsername(), request.getPassword());
+        System.out.println("the password: " + hashedPassword);
         return authService.loginEmployee(request.getUsername(), request.getPassword());
     }
 
@@ -35,5 +33,9 @@ public class AuthController {
         return authService.loginEmployer(request.getUsername(), request.getPassword());
     }
 
-
+    @RequestMapping("/logout")
+    public BasicResponse logoutUser(@RequestHeader("Authorization") String token){
+        // TODO: delete the token from table.
+        return new BasicResponse();
+    }
 }
