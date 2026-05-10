@@ -7,24 +7,23 @@ public class WorkDay {
     private Long userId; // id של עובד
     private Date enterTime;
     private Date exitTime;
-    private String location;
-
+    private WorkingSite workingSite;
     public WorkDay() {
     }
 
-    public WorkDay(Long id, Long userId, Date enterTime, Date exitTime, String location) {
+    public WorkDay(Long id, Long userId, Date enterTime, Date exitTime, WorkingSite workingSite) {
         this.id = id;
         this.userId = userId;
         this.enterTime = enterTime;
         this.exitTime = exitTime;
-        this.location = location;
+        this.workingSite = workingSite;
     }
 
-    public WorkDay(Long userId, Date enterTime, String location) {
+    public WorkDay(Long userId, Date enterTime, WorkingSite workingSite) {
         this.userId = userId;
         this.enterTime = enterTime;
         this.exitTime = exitTime;
-        this.location = location;
+        this.workingSite = workingSite;
     }
 
     public Long getId() {
@@ -59,11 +58,11 @@ public class WorkDay {
         this.exitTime = exitTime;
     }
 
-    public String getLocation() {
-        return location;
+    public WorkingSite getWorkingSite() {
+        return workingSite;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setWorkingSite(WorkingSite workingSite) {
+        this.workingSite = workingSite;
     }
 }

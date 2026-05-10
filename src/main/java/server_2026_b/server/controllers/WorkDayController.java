@@ -42,7 +42,6 @@ public class WorkDayController {
 
     @GetMapping("/sites")
     public BasicResponse getAllSites(){
-        // TODO: return the list of Working sites
-        return new BasicResponse();
+        return workDayService.getAllSites();
     }
 }
