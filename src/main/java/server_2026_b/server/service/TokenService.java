@@ -26,11 +26,27 @@ public class TokenService {
     @Transactional
     public String createRefreshToken(User user) {
         String refreshTokenValue = jwtService.generateRefreshToken(user);
-        RefreshToken refreshToken = createRefreshTokenEntity(user, refreshTokenValue);
-        refreshTokenRepository.deleteByUserId(user.getId());
-        refreshTokenRepository.save(refreshToken);
-       return refreshTokenValue;
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiresAt = TokenUtils.toLocalDateTime(
+                jwtService.extractExpiration(refreshTokenValue)
+        );
+
+        RefreshToken existing = refreshTokenRepository.findByUserId(user.getId());
+        if (existing != null) {
+            existing.setToken(refreshTokenValue);
+            existing.setCreatedAt(now);
+            existing.setExpiresAt(expiresAt);
+            refreshTokenRepository.save(existing);
+        } else {
+            RefreshToken fresh = new RefreshToken(refreshTokenValue, now, expiresAt,
+                    user.getId(), user.getUserType());
+            refreshTokenRepository.save(fresh);
+        }
+
+        return refreshTokenValue;
     }
+
+
     public String createAccessToken(User user){
         String accessToken = jwtService.generateAccessToken(user);
         return accessToken;
@@ -125,5 +141,14 @@ public class TokenService {
         if (refreshToken != null) {
             refreshTokenRepository.delete(refreshToken);
         }
+    }
+
+    @Transactional
+    public boolean logoutByUserId(Long userId) {
+        if (userId == null) {
+            return false;
+        }
+        refreshTokenRepository.deleteByUserId(userId);
+        return true;
     }
 }

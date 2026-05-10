@@ -42,8 +42,8 @@ public class WorkDayService {
         return userService.getEmployeeByAccessToken(token);
     }
 
-    public BasicResponse enter(EnterRequest request){
-        Employee employee = getEmployeeByToken(request.getToken());
+    public BasicResponse enter(String token, EnterRequest request) {
+        Employee employee = getEmployeeByToken(token);
         if(employee == null){
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
         }
@@ -57,8 +57,8 @@ public class WorkDayService {
         return new BasicResponse(true, null);
     }
 
-    public BasicResponse exit(ExitRequest request) {
-        Employee employee = getEmployeeByToken(request.getToken());
+    public BasicResponse exit(String token, ExitRequest request) {
+        Employee employee = getEmployeeByToken(token);
         if (employee == null) {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
         }

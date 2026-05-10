@@ -8,7 +8,9 @@ public class Constants {
     public static final String DB_PASSWORD = "1234";
 
 
-
+    //HTTPONLY
+    public static final String ACCESS_TOKEN_COOKIE = "accessToken";
+    public static final String REFRESH_TOKEN_COOKIE = "refreshToken";
 
 
 
