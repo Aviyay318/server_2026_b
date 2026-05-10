@@ -3,10 +3,7 @@ package server_2026_b.server.controllers;
 import org.springframework.web.bind.annotation.*;
 import server_2026_b.server.requests.EnterRequest;
 import server_2026_b.server.requests.ExitRequest;
-import server_2026_b.server.responses.BasicResponse;
-import server_2026_b.server.responses.WorkHoursResponse;
-import server_2026_b.server.responses.WorkListResponse;
-import server_2026_b.server.responses.WorkStatusResponse;
+import server_2026_b.server.responses.*;
 import server_2026_b.server.service.WorkDayService;
 
 @RestController
@@ -41,7 +38,7 @@ public class WorkDayController {
     }
 
     @GetMapping("/sites")
-    public BasicResponse getAllSites(){
+    public SiteListResponse getAllSites(){
         return workDayService.getAllSites();
     }
 }
