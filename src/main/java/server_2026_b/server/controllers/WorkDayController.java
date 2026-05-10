@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import server_2026_b.server.requests.EnterRequest;
 import server_2026_b.server.requests.ExitRequest;
 import server_2026_b.server.responses.BasicResponse;
+import server_2026_b.server.responses.WorkHoursResponse;
 import server_2026_b.server.responses.WorkListResponse;
 import server_2026_b.server.responses.WorkStatusResponse;
 import server_2026_b.server.service.WorkDayService;
@@ -32,6 +33,11 @@ public class WorkDayController {
     @GetMapping("/list")
     public WorkListResponse getAllWorkList(@CookieValue(value = "accessToken", required = false) String token) {
         return workDayService.getAllWorkList(token);
+    }
+
+    @GetMapping ("/total-hours")
+    public WorkHoursResponse getTotalHoursAtMonth (@CookieValue(value = "accessToken", required = false) String token, @RequestParam Integer month){
+        return workDayService.getTotalHoursAtMonth(token,month);
     }
 
     @GetMapping("/sites")

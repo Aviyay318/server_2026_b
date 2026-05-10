@@ -9,6 +9,7 @@ import server_2026_b.server.entities.WorkDay;
 import server_2026_b.server.requests.EnterRequest;
 import server_2026_b.server.requests.ExitRequest;
 import server_2026_b.server.responses.BasicResponse;
+import server_2026_b.server.responses.WorkHoursResponse;
 import server_2026_b.server.responses.WorkListResponse;
 import server_2026_b.server.responses.WorkStatusResponse;
 import server_2026_b.server.utils.Errors;
@@ -95,4 +96,12 @@ public class WorkDayService {
         return new WorkListResponse(true, null, list);
     }
 
+    public WorkHoursResponse getTotalHoursAtMonth (String token, Integer month){
+        Employee employee = getEmployeeByToken(token);
+        if(employee == null){
+            return new WorkHoursResponse(false,Errors.ERROR_INVALID_TOKEN,null,month);
+        }
+        Double totalHours = workDayRepository.getTotalHoursByMonth(employee.getId(),month);
+        return new WorkHoursResponse(true, null, totalHours, month);
+    }
 }
