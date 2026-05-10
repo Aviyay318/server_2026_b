@@ -6,7 +6,11 @@ import server_2026_b.server.requests.LoginRequest;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.LoginResponse;
 import server_2026_b.server.service.AuthService;
+import server_2026_b.server.utils.CookieUtils;
+import server_2026_b.server.utils.Errors;
 import server_2026_b.server.utils.GenerateHash;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,24 +22,60 @@ public class AuthController {
     }
 
     @PostMapping("/loginEmployee")
-    public LoginResponse loginEmployee(@RequestBody LoginRequest request) {
-        // סיסמה לרישום עובדים
-        String hashedPassword = GenerateHash.hashMd5(request.getUsername(), request.getPassword());
-        System.out.println("the password: " + hashedPassword);
-        return authService.loginEmployee(request.getUsername(), request.getPassword());
+    public LoginResponse loginEmployee(@RequestBody LoginRequest request,
+                                       HttpServletResponse response) {
+        LoginResponse loginResponse = authService.loginEmployee(
+                request.getUsername(), request.getPassword());
+
+        if (loginResponse.isSuccess()) {
+            CookieUtils.setAuthCookies(response,
+                    loginResponse.getAccessToken(),
+                    loginResponse.getRefreshToken());
+            stripTokensFromBody(loginResponse);
+        }
+        return loginResponse;
     }
 
     @PostMapping("/loginEmployer")
-    public LoginResponse loginEmployer(@RequestBody LoginRequest request){
-        // סיסמה לרישום מנהלים
-        String hashedPassword = GenerateHash.hashMd5(request.getUsername(), request.getPassword());
-        System.out.println("the password: " + hashedPassword);
-        return authService.loginEmployer(request.getUsername(), request.getPassword());
+    public LoginResponse loginEmployer(@RequestBody LoginRequest request,
+                                       HttpServletResponse response) {
+        LoginResponse loginResponse = authService.loginEmployer(
+                request.getUsername(), request.getPassword());
+
+        if (loginResponse.isSuccess()) {
+            CookieUtils.setAuthCookies(response,
+                    loginResponse.getAccessToken(),
+                    loginResponse.getRefreshToken());
+            stripTokensFromBody(loginResponse);
+        }
+        return loginResponse;
     }
 
-    @RequestMapping("/logout")
-    public BasicResponse logoutUser(@RequestHeader("Authorization") String token){
-        // TODO: delete the token from table.
-        return new BasicResponse();
+    @PostMapping("/logout")
+    public BasicResponse logoutUser(
+            @CookieValue(value = "accessToken", required = false) String token,
+            HttpServletResponse response) {
+        BasicResponse basicResponse = authService.logout(token);
+        CookieUtils.clearAuthCookies(response);
+        return basicResponse;
+    }
+
+    private void stripTokensFromBody(LoginResponse loginResponse) {
+        loginResponse.setAccessToken(null);
+        loginResponse.setRefreshToken(null);
+        loginResponse.setToken(null);
+    }
+
+    @PostMapping("/refresh")
+    public BasicResponse refresh(
+            @CookieValue(value = "refreshToken", required = false) String refreshToken,
+            HttpServletResponse response) {
+        String newAccessToken = authService.refresh(refreshToken);
+        if (newAccessToken == null) {
+            CookieUtils.clearAuthCookies(response);
+            return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
+        }
+        CookieUtils.setAccessCookie(response, newAccessToken);
+        return new BasicResponse(true, null);
     }
 }
