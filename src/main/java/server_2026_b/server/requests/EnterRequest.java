@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class EnterRequest {
     private String token;
-    private String location;
+    private Long siteId;
     private Date startTime;
 
     public String getToken() {
@@ -15,12 +15,12 @@ public class EnterRequest {
         this.token = token;
     }
 
-    public String getLocation() {
-        return location;
+    public Long getSiteId() {
+        return siteId;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
     }
 
     public Date getStartTime() {

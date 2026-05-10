@@ -84,6 +84,9 @@
         <property name="userId" column="user_id" type="java.lang.Long" not-null="true"/>
         <property name="enterTime" column="enter_time" type="timestamp"/>
         <property name="exitTime" column="exit_time" type="timestamp"/>
-        <property name="location" column="location" type="string"/>
+        <many-to-one name="workingSite"
+                     class="server_2026_b.server.entities.WorkingSite"
+                     column="site_id"
+                     not-null="false" />
     </class>
 </hibernate-mapping>
