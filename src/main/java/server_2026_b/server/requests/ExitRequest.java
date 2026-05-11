@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ExitRequest {
     private String token;
-    private String location;
+    private Long siteId;
     private Date endTime;
 
     public String getToken() {
@@ -23,11 +23,11 @@ public class ExitRequest {
         this.endTime = endTime;
     }
 
-    public String getLocation() {
-        return location;
+    public Long getSiteId() {
+        return siteId;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
     }
 }

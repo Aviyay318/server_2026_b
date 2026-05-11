@@ -18,6 +18,7 @@ import server_2026_b.server.responses.WorkStatusResponse;
 import server_2026_b.server.utils.Errors;
 import server_2026_b.server.utils.UserType;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -32,7 +33,6 @@ public class WorkDayService {
         this.tokenService = tokenService;
         this.workDayRepository = workDayRepository;
         this.userService =userService;
-
     }
 
     public Employee getEmployeeByToken(String token){
@@ -57,13 +57,15 @@ public class WorkDayService {
         if(open != null){
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_ALREADY_WORKING);
         }
-
+        if (request == null || request.getSiteId() == null){
+            return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
+        }
         WorkingSite site = persist.loadObject(WorkingSite.class, request.getSiteId());
         if(site == null){
             return new BasicResponse(false , Errors.ERROR_SITE_NOT_FOUND);
         }
-
-        WorkDay workDay = new WorkDay(employee.getId(), request.getStartTime(), site);
+        Date startTime = request.getStartTime() != null? request.getStartTime() : new Date();
+        WorkDay workDay = new WorkDay(employee.getId(), startTime, site);
         workDayRepository.save(workDay);
         return new BasicResponse(true, null);
     }

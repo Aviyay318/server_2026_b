@@ -7,23 +7,32 @@ public class WorkDay {
     private Long userId; // id של עובד
     private Date enterTime;
     private Date exitTime;
-    private WorkingSite workingSite;
+    private WorkingSite enterSite;
+    private WorkingSite exitSite;
     public WorkDay() {
     }
 
-    public WorkDay(Long id, Long userId, Date enterTime, Date exitTime, WorkingSite workingSite) {
+    public WorkDay(Long id, Long userId, Date enterTime, Date exitTime, WorkingSite enterSite, WorkingSite exitSite) {
         this.id = id;
         this.userId = userId;
         this.enterTime = enterTime;
         this.exitTime = exitTime;
-        this.workingSite = workingSite;
+        this.enterSite = enterSite;
+        this.exitSite = exitSite;
     }
 
-    public WorkDay(Long userId, Date enterTime, WorkingSite workingSite) {
+    public WorkDay(Long userId, Date enterTime, Date exitTime, WorkingSite enterSite, WorkingSite exitSite) {
         this.userId = userId;
         this.enterTime = enterTime;
         this.exitTime = exitTime;
-        this.workingSite = workingSite;
+        this.enterSite = enterSite;
+        this.exitSite = exitSite;
+    }
+
+    public WorkDay(Long userId, Date enterTime, WorkingSite enterSite) {
+        this.userId = userId;
+        this.enterTime = enterTime;
+        this.enterSite = enterSite;
     }
 
     public Long getId() {
@@ -58,11 +67,19 @@ public class WorkDay {
         this.exitTime = exitTime;
     }
 
-    public WorkingSite getWorkingSite() {
-        return workingSite;
+    public WorkingSite getEnterSite() {
+        return enterSite;
     }
 
-    public void setWorkingSite(WorkingSite workingSite) {
-        this.workingSite = workingSite;
+    public void setEnterSite(WorkingSite enterSite) {
+        this.enterSite = enterSite;
+    }
+
+    public WorkingSite getExitSite() {
+        return exitSite;
+    }
+
+    public void setExitSite(WorkingSite exitSite) {
+        this.exitSite = exitSite;
     }
 }
