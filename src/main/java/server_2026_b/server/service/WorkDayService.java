@@ -36,15 +36,6 @@ public class WorkDayService {
     }
 
     public Employee getEmployeeByToken(String token){
-//        Long userId = tokenService.getUserIdFromAccessToken(token);
-//        UserType userType = tokenService.getUserTypeFromAccessToken(token);
-//
-//        if (userId == null || userType == null) {
-//            return null;
-//        }
-//        if (userType != UserType.EMPLOYEE) {
-//            return null;
-//        }
         return userService.getEmployeeByAccessToken(token);
     }
 
@@ -57,15 +48,27 @@ public class WorkDayService {
         if(open != null){
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_ALREADY_WORKING);
         }
-        if (request == null || request.getSiteId() == null){
+        if (request == null || (request.getSiteId() == null && request.getLocation() == null)){
             return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
         }
-        WorkingSite site = persist.loadObject(WorkingSite.class, request.getSiteId());
-        if(site == null){
-            return new BasicResponse(false , Errors.ERROR_SITE_NOT_FOUND);
+        WorkingSite site;
+        if (request.getSiteId() != null){
+            site = persist.loadObject(WorkingSite.class, request.getSiteId());
+        } else {
+            site = null;
+        }
+        if(site != null && request.getLocation() != null){
+            return new BasicResponse(false , Errors.ERROR_TWO_LOCATIONS_AT_ONCE);
+        } else if (site == null && request.getLocation() == null) {
+            return new BasicResponse(false , Errors.ERROR_NO_LOCATION_OR_SITE_PROVIDED);
         }
         Date startTime = request.getStartTime() != null? request.getStartTime() : new Date();
-        WorkDay workDay = new WorkDay(employee.getId(), startTime, site);
+        WorkDay workDay = new WorkDay();
+        workDay.setUserId(employee.getId());
+        workDay.setEnterTime(startTime);
+        workDay.setEnterSite(site);
+        workDay.setEnterLocation(request.getLocation());
+
         workDayRepository.save(workDay);
         return new BasicResponse(true, null);
     }
@@ -80,8 +83,21 @@ public class WorkDayService {
         if (open == null) {
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_NOT_WORKING);
         }
-
-        open.setExitTime(request.getEndTime());
+        WorkingSite site;
+        if (request.getSiteId() != null){
+            site = persist.loadObject(WorkingSite.class, request.getSiteId());
+        } else {
+            site = null;
+        }
+        if(site != null && request.getLocation() != null){
+            return new BasicResponse(false , Errors.ERROR_TWO_LOCATIONS_AT_ONCE);
+        } else if (site == null && request.getLocation() == null) {
+            return new BasicResponse(false , Errors.ERROR_NO_LOCATION_OR_SITE_PROVIDED);
+        }
+        Date endTime = request.getEndTime() != null? request.getEndTime() : new Date();
+        open.setExitTime(endTime);
+        open.setExitSite(site);
+        open.setExitLocation(request.getLocation());
         workDayRepository.save(open);
         return new BasicResponse(true, null);
     }

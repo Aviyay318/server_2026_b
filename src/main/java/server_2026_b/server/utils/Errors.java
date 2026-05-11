@@ -10,6 +10,8 @@ public class Errors {
     public static final int ERROR_EMPLOYEE_ALREADY_WORKING = 4000;
     public static final int ERROR_EMPLOYEE_NOT_WORKING = 4001;
 
-    public static final int ERROR_FETCHING_SITES = 5002;
-    public static final int ERROR_SITE_NOT_FOUND = 5003;
+    public static final int ERROR_FETCHING_SITES = 5001;
+    public static final int ERROR_SITE_NOT_FOUND = 5002;
+    public static final int ERROR_TWO_LOCATIONS_AT_ONCE = 5003;
+    public static final int ERROR_NO_LOCATION_OR_SITE_PROVIDED = 5004;
 }

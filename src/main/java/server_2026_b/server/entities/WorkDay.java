@@ -7,32 +7,39 @@ public class WorkDay {
     private Long userId; // id של עובד
     private Date enterTime;
     private Date exitTime;
+    private String enterLocation;
+    private String exitLocation;
     private WorkingSite enterSite;
     private WorkingSite exitSite;
     public WorkDay() {
     }
 
-    public WorkDay(Long id, Long userId, Date enterTime, Date exitTime, WorkingSite enterSite, WorkingSite exitSite) {
+    public WorkDay(Long id, Long userId, Date enterTime, Date exitTime, String enterLocation, String exitLocation, WorkingSite enterSite, WorkingSite exitSite) {
         this.id = id;
         this.userId = userId;
         this.enterTime = enterTime;
         this.exitTime = exitTime;
+        this.enterLocation = enterLocation;
+        this.exitLocation = exitLocation;
         this.enterSite = enterSite;
         this.exitSite = exitSite;
     }
 
-    public WorkDay(Long userId, Date enterTime, Date exitTime, WorkingSite enterSite, WorkingSite exitSite) {
+    public WorkDay(Long userId, Date enterTime, Date exitTime, String enterLocation, String exitLocation, WorkingSite enterSite, WorkingSite exitSite) {
         this.userId = userId;
         this.enterTime = enterTime;
         this.exitTime = exitTime;
+        this.enterLocation = enterLocation;
+        this.exitLocation = exitLocation;
         this.enterSite = enterSite;
         this.exitSite = exitSite;
     }
 
-    public WorkDay(Long userId, Date enterTime, WorkingSite enterSite) {
+    public WorkDay(Long userId, Date enterTime, WorkingSite enterSite, String enterLocation) {
         this.userId = userId;
         this.enterTime = enterTime;
         this.enterSite = enterSite;
+        this.enterLocation = enterLocation;
     }
 
     public Long getId() {
@@ -81,5 +88,21 @@ public class WorkDay {
 
     public void setExitSite(WorkingSite exitSite) {
         this.exitSite = exitSite;
+    }
+
+    public String getEnterLocation() {
+        return enterLocation;
+    }
+
+    public void setEnterLocation(String enterLocation) {
+        this.enterLocation = enterLocation;
+    }
+
+    public String getExitLocation() {
+        return exitLocation;
+    }
+
+    public void setExitLocation(String exitLocation) {
+        this.exitLocation = exitLocation;
     }
 }

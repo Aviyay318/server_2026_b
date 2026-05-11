@@ -5,7 +5,16 @@ import java.util.Date;
 public class ExitRequest {
     private String token;
     private Long siteId;
+    private String location;
     private Date endTime;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getToken() {
         return token;
