@@ -3,6 +3,7 @@ package server_2026_b.server.database;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.WorkDay;
+import server_2026_b.server.entities.WorkingSite;
 import server_2026_b.server.service.Persist;
 
 import java.util.List;
@@ -61,5 +62,13 @@ public class WorkDayRepository {
             }
         }
         return totalHours;
+    }
+
+    public WorkingSite findSiteById(Long siteId) {
+        return persist.loadObject(WorkingSite.class, siteId);
+    }
+
+    public List<WorkingSite> findAllSites() {
+        return persist.loadList(WorkingSite.class);
     }
 }

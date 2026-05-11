@@ -26,10 +26,8 @@ public class WorkDayService {
     private final TokenService tokenService;
     private final WorkDayRepository workDayRepository;
    private final UserService userService;
-   private final Persist persist;
 
-    public WorkDayService(Persist persist, TokenService tokenService, WorkDayRepository workDayRepository, UserService userService) {
-       this.persist = persist;
+    public WorkDayService(TokenService tokenService, WorkDayRepository workDayRepository, UserService userService) {
         this.tokenService = tokenService;
         this.workDayRepository = workDayRepository;
         this.userService =userService;
@@ -51,16 +49,16 @@ public class WorkDayService {
         if (request == null || (request.getSiteId() == null && request.getLocation() == null)){
             return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
         }
-        WorkingSite site;
-        if (request.getSiteId() != null){
-            site = persist.loadObject(WorkingSite.class, request.getSiteId());
-        } else {
-            site = null;
+
+        WorkingSite site = null;
+        if (request.getSiteId() != null) {
+            site = workDayRepository.findSiteById(request.getSiteId());
+            if (site == null) {
+                return new BasicResponse(false, Errors.ERROR_SITE_NOT_FOUND);
+            }
         }
-        if(site != null && request.getLocation() != null){
-            return new BasicResponse(false , Errors.ERROR_TWO_LOCATIONS_AT_ONCE);
-        } else if (site == null && request.getLocation() == null) {
-            return new BasicResponse(false , Errors.ERROR_NO_LOCATION_OR_SITE_PROVIDED);
+        if (site != null && request.getLocation() != null) {
+            return new BasicResponse(false, Errors.ERROR_TWO_LOCATIONS_AT_ONCE);
         }
         Date startTime = request.getStartTime() != null? request.getStartTime() : new Date();
         WorkDay workDay = new WorkDay();
@@ -85,7 +83,7 @@ public class WorkDayService {
         }
         WorkingSite site;
         if (request.getSiteId() != null){
-            site = persist.loadObject(WorkingSite.class, request.getSiteId());
+            site = workDayRepository.findSiteById(request.getSiteId());
         } else {
             site = null;
         }
@@ -127,7 +125,7 @@ public class WorkDayService {
 
     public SiteListResponse getAllSites(){
         try {
-            List<WorkingSite> sites = persist.loadList(WorkingSite.class);
+            List<WorkingSite> sites = workDayRepository.findAllSites();
             return new SiteListResponse(true , null, sites);
         } catch (Exception e) {
             return new SiteListResponse(false, Errors.ERROR_FETCHING_SITES, null);
