@@ -1,5 +1,8 @@
 package server_2026_b.server.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class WorkingSite {
     private long id;
     private String name;
