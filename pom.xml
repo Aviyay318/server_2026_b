@@ -94,6 +94,12 @@
             <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- Latest version from com.github.javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
     </dependencies>
 
