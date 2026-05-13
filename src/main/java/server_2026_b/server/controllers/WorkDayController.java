@@ -3,6 +3,7 @@ package server_2026_b.server.controllers;
 import org.springframework.web.bind.annotation.*;
 import server_2026_b.server.requests.EnterRequest;
 import server_2026_b.server.requests.ExitRequest;
+import server_2026_b.server.requests.ReportAbsenceRequest;
 import server_2026_b.server.responses.*;
 import server_2026_b.server.service.WorkDayService;
 
@@ -40,5 +41,16 @@ public class WorkDayController {
     @GetMapping("/sites")
     public SiteListResponse getAllSites(){
         return workDayService.getAllSites();
+    }
+
+    @GetMapping("/get-all-absence-reasons")
+    public AbsenceReasonsResponse getAllAbsenceReasons(@CookieValue(value = "accessToken", required = false) String token) {
+        return workDayService.getAllAbsenceReasons(token);
+    }
+
+    @PostMapping("/report-absence")
+    public BasicResponse reportAbsence(@CookieValue(value = "accessToken", required = false) String token,
+                                       @RequestBody ReportAbsenceRequest request) {
+        return workDayService.reportAbsence(token, request);
     }
 }

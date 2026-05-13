@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.WorkDay;
 import server_2026_b.server.entities.WorkingSite;
 import server_2026_b.server.service.Persist;
+import server_2026_b.server.utils.ShiftStatus;
 
 import java.util.List;
 
@@ -26,10 +27,11 @@ public class WorkDayRepository {
     public WorkDay findOpenByUserId(Long userId) {
         return persist.getQuerySession()
                 .createQuery(
-                        "FROM WorkDay WHERE userId = :userId AND exitTime IS NULL ORDER BY enterTime DESC",
+                        "FROM WorkDay WHERE userId = :userId AND status = :status ORDER BY enterTime DESC",
                         WorkDay.class
                 )
                 .setParameter("userId", userId)
+                .setParameter("status", ShiftStatus.IN_PROGRESS)
                 .setMaxResults(1)
                 .uniqueResult();
     }
@@ -49,6 +51,9 @@ public class WorkDayRepository {
         double totalHours = 0;
 
         for (WorkDay workDay : allWorkDays) {
+            if (workDay.getStatus() == ShiftStatus.ABSENCE) {
+                continue;
+            }
             if (workDay.getEnterTime() != null && workDay.getExitTime() != null) {
                 java.util.Calendar cal = java.util.Calendar.getInstance();//ספרייה ששולפת חודש
                 cal.setTime(workDay.getEnterTime());

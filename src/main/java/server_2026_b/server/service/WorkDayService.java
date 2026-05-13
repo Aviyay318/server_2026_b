@@ -10,14 +10,19 @@ import server_2026_b.server.entities.WorkDay;
 import server_2026_b.server.entities.WorkingSite;
 import server_2026_b.server.requests.EnterRequest;
 import server_2026_b.server.requests.ExitRequest;
+import server_2026_b.server.requests.ReportAbsenceRequest;
+import server_2026_b.server.responses.AbsenceReasonsResponse;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.SiteListResponse;
 import server_2026_b.server.responses.WorkHoursResponse;
 import server_2026_b.server.responses.WorkListResponse;
 import server_2026_b.server.responses.WorkStatusResponse;
+import server_2026_b.server.utils.AbsenceReason;
 import server_2026_b.server.utils.Errors;
+import server_2026_b.server.utils.ShiftStatus;
 import server_2026_b.server.utils.UserType;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -66,6 +71,7 @@ public class WorkDayService {
         workDay.setEnterTime(startTime);
         workDay.setEnterSite(site);
         workDay.setEnterLocation(request.getLocation());
+        workDay.setStatus(ShiftStatus.IN_PROGRESS);
 
         workDayRepository.save(workDay);
         return new BasicResponse(true, null);
@@ -96,6 +102,7 @@ public class WorkDayService {
         open.setExitTime(endTime);
         open.setExitSite(site);
         open.setExitLocation(request.getLocation());
+        open.setStatus(ShiftStatus.FINISHED);
         workDayRepository.save(open);
         return new BasicResponse(true, null);
     }
@@ -139,5 +146,40 @@ public class WorkDayService {
         }
         Double totalHours = workDayRepository.getTotalHoursByMonth(employee.getId(),month);
         return new WorkHoursResponse(true, null, totalHours, month);
+    }
+
+    public AbsenceReasonsResponse getAllAbsenceReasons(String token) {
+        Employee employee = getEmployeeByToken(token);
+        if (employee == null) {
+            return new AbsenceReasonsResponse(false, Errors.ERROR_INVALID_TOKEN, null);
+        }
+        return new AbsenceReasonsResponse(true, null, Arrays.asList(AbsenceReason.values()));
+    }
+
+    public BasicResponse reportAbsence(String token, ReportAbsenceRequest request) {
+        Employee employee = getEmployeeByToken(token);
+        if (employee == null) {
+            return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
+        }
+        if (request == null || request.getReason() == null) {
+            return new BasicResponse(false, Errors.ERROR_INVALID_ABSENCE_REASON);
+        }
+
+        Date now = new Date();
+        WorkDay open = workDayRepository.findOpenByUserId(employee.getId());
+        if (open != null) {
+            open.setStatus(ShiftStatus.ABSENCE);
+            open.setAbsenceReason(request.getReason());
+            open.setExitTime(now);
+            workDayRepository.save(open);
+        } else {
+            WorkDay workDay = new WorkDay();
+            workDay.setUserId(employee.getId());
+            workDay.setEnterTime(now);
+            workDay.setStatus(ShiftStatus.ABSENCE);
+            workDay.setAbsenceReason(request.getReason());
+            workDayRepository.save(workDay);
+        }
+        return new BasicResponse(true, null);
     }
 }

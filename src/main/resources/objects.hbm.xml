@@ -93,5 +93,18 @@
         <many-to-one name="exitSite"
                      class="server_2026_b.server.entities.WorkingSite"
                      column="exit_site_id"/>
+
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.ShiftStatus</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="absenceReason" column="absence_reason">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.AbsenceReason</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
     </class>
 </hibernate-mapping>
