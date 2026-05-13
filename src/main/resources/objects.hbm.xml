@@ -94,4 +94,21 @@
                      class="server_2026_b.server.entities.WorkingSite"
                      column="exit_site_id"/>
     </class>
+
+    <class name="server_2026_b.server.entities.Shift" table="shifts">
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+        <property name="userId" column="user_id" type="java.lang.Long" not-null="true"/>
+        <property name="startTime" column="start_time" type="timestamp" not-null="true"/>
+        <property name="endTime" column="end_time" type="timestamp" not-null="true"/>
+        <property name="location" column="location" type="string"/>
+        <many-to-one name="workingSite"
+                     class="server_2026_b.server.entities.WorkingSite"
+                     column="worksite_id"
+                     not-null="false"/>
+        <property name="position" column="position" type="string"/>
+    </class>
+                     
+
 </hibernate-mapping>

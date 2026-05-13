@@ -15,5 +15,9 @@ public class Errors {
     public static final int ERROR_TWO_LOCATIONS_AT_ONCE = 5003;
     public static final int ERROR_NO_LOCATION_OR_SITE_PROVIDED = 5004;
 
+    public static final int ERROR_FETCHING_SHIFTS = 6001;
+    public static final int ERROR_SHIFT_NOT_FOUND = 6002;
+    public static final int ERROR_INVALID_DATE_FORMAT = 6003;
+
     public static final int ERROR_TEST_ADD_DATA_FAILED = 9001;
 }
