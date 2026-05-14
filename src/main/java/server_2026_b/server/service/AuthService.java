@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import server_2026_b.server.entities.RefreshToken;
 import server_2026_b.server.entities.Employee;
 import server_2026_b.server.entities.Employer;
+import server_2026_b.server.entities.User;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.LoginResponse;
 import server_2026_b.server.utils.Errors;
@@ -29,62 +30,45 @@ public class AuthService { // מחוברת לדאטה בייס ע״י Persist
         this.tokenExpirySseService = tokenExpirySseService;
     }
 
-    public LoginResponse loginEmployee(String username, String password) { // הצעה לעשות את המתודה גנרית כי התחברות עובד ומעסיק דומות מאוד או לעשות loginUser אחד
-        if (username == null || username.trim().isEmpty()
-                || password == null || password.trim().isEmpty()) {
-            return new LoginResponse(ERROR_EMPTY_FIELD, false, "Missing username or password", null, null);
-        }
-        username = username.trim();
-        password = password.trim();
-        String hashedPassword = GenerateHash.hashMd5(username, password);
-//        Employee employee = persist.getEmployeeByUsernameAndPassword(username, hashedPassword);
-        Employee employee = userService.getEmployeeByUsernameAndPassword(username, hashedPassword);
-        if (employee == null) {
-            return new LoginResponse(ERROR_WRONG_CREDENTIALS, false, "Wrong username or password", null, null);
-        }
-//        RefreshToken refreshToken = tokenService.createAndSaveToken(employee.getId(), UserType.EMPLOYEE);
-        String refreshToken = tokenService.createRefreshToken(employee);
-        String accessToken = tokenService.createAccessToken(employee);
-
-        //return new LoginResponse(null, true, "Login successful", refreshToken.getToken(), UserType.EMPLOYEE);
-        return new LoginResponse(null, true, "Login successful", accessToken, refreshToken, employee.getUserType());
+    public LoginResponse loginEmployee(String username, String password) {
+        return loginUser(username, password, UserType.EMPLOYEE);
     }
 
     public LoginResponse loginEmployer(String username, String password) {
-        if (username == null || username.trim().isEmpty()
-                || password == null || password.trim().isEmpty()) {
-            return new LoginResponse(Errors.ERROR_EMPTY_FIELD, false,
-                    "Missing username or password", null, null);
+        return loginUser(username, password, UserType.EMPLOYER);
+    }
+
+
+    private LoginResponse loginUser(String username, String password, UserType userType) {
+        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()
+                || userType == null) {return new LoginResponse(ERROR_EMPTY_FIELD, false, "Missing username or password");
         }
         username = username.trim();
         password = password.trim();
         String hashedPassword = GenerateHash.hashMd5(username, password);
-//        Employer employer = persist.getEmployerByUsernameAndPassword(username, hashedPassword);
-        Employer employer = userService.getEmployerByUsernameAndPassword(username, hashedPassword);
+        User user = userService.getUserByUsernameAndPasswordAndType(
+               username, hashedPassword, userType);
+        if (user == null) {
+            return new LoginResponse(ERROR_WRONG_CREDENTIALS, false, "Wrong username or password");}
 
-        if (employer == null) {
-            return new LoginResponse(Errors.ERROR_WRONG_CREDENTIALS, false,
-                    "Wrong username or password", null, null);
-        }
-        //RefreshToken refreshToken = tokenService.createAndSaveToken(employer.getId(), UserType.EMPLOYER);
-        String refreshToken = tokenService.createRefreshToken(employer);
-        String accessToken = tokenService.createAccessToken(employer);
-
-        return new LoginResponse(null, true, "Login successful", accessToken, refreshToken, employer.getUserType());
-//        return new LoginResponse(null, true,
-//                "Login successful", refreshToken.getToken(), UserType.EMPLOYER);
+        String refreshToken = tokenService.createRefreshToken(user);
+        String accessToken = tokenService.createAccessToken(user);
+        return new LoginResponse(null, true, "Login successful",
+                accessToken, refreshToken,
+                user.getUserType()
+        );
     }
+
+
 
     public BasicResponse logout(String token) {
         if (!TokenUtils.isTokenTextValid(token)) {
             return new BasicResponse(false, ERROR_INVALID_TOKEN);
         }
-
         Long userId = tokenService.getUserIdFromAccessToken(token);
         if (userId == null) {
             return new BasicResponse(false, ERROR_INVALID_TOKEN);
         }
-
         tokenService.logoutByUserId(userId);
         tokenExpirySseService.disconnect(userId);
         return new BasicResponse(true, null);
