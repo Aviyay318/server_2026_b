@@ -2,8 +2,6 @@ package server_2026_b.server.service;
 
 import org.springframework.stereotype.Service;
 import server_2026_b.server.database.UserRepository;
-import server_2026_b.server.entities.Employee;
-import server_2026_b.server.entities.Employer;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.utils.UserType;
 
@@ -24,44 +22,28 @@ public class UserService {
         }
         return userRepository.findUserById(userId);
     }
-
-    public Employee getEmployeeByAccessToken(String accessToken) {
-       User user = getUserByAccessToken(accessToken);
-       if (user ==null){return null;}
-        if (user.getUserType()!= UserType.EMPLOYEE) {
+    public User getUserByAccessTokenAndType(String accessToken, UserType userType) {
+        if (userType == null) {
             return null;
         }
-        return userRepository.findEmployeeById(user.getId());
-    }
-
-    public Employer getEmployerByAccessToken(String accessToken) {
         User user = getUserByAccessToken(accessToken);
-        if (user ==null){return null;}
-        if (user.getUserType() != UserType.EMPLOYER) {
+        if (user == null|| user.getUserType() != userType) {
             return null;
         }
-        return userRepository.findEmployerById(user.getId());
+
+        return user;
     }
 
 
-    public Employee getEmployeeByUsernameAndPassword(String username, String hashedPassword) {
-        if (isMissing(username, hashedPassword)) {
+    public User getUserByUsernameAndPasswordAndType(String username, String hashedPassword,  UserType userType) {
+        if (isMissing(username, hashedPassword)|| userType == null) {
             return null;
         }
-        return userRepository.findEmployeeByUsernameAndPassword(username.trim(), hashedPassword.trim()
-        );
+        return userRepository.findUserByUsernamePasswordAndType(username.trim(), hashedPassword.trim(), userType);
     }
 
 
-    public Employer getEmployerByUsernameAndPassword(String username, String hashedPassword) {
-        if (isMissing(username, hashedPassword)) {
-            return null;
-        }
-        return userRepository.findEmployerByUsernameAndPassword(
-                username.trim(),
-                hashedPassword.trim()
-        );
-    }
+
 
     private boolean isMissing(String username, String password) {
         return username == null || username.trim().isEmpty()
