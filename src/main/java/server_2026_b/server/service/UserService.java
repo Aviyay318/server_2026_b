@@ -49,4 +49,12 @@ public class UserService {
         return username == null || username.trim().isEmpty()
                 || password == null || password.trim().isEmpty();
     }
+
+    public User getEmployeeByAccessToken(String accessToken) {
+        return getUserByAccessTokenAndType(accessToken, UserType.EMPLOYEE);
+    }
+
+    public User getEmployerByAccessToken(String accessToken) {
+        return getUserByAccessTokenAndType(accessToken, UserType.EMPLOYER);
+    }
 }
