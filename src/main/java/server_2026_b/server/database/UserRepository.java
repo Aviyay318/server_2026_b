@@ -2,8 +2,6 @@ package server_2026_b.server.database;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import server_2026_b.server.entities.Employee;
-import server_2026_b.server.entities.Employer;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.service.Persist;
 import server_2026_b.server.utils.UserType;
@@ -23,9 +21,11 @@ public class UserRepository {
         return persist.loadObject(User.class, userId);
     }
 
-
     @Transactional
     public User findUserByUsernamePasswordAndType(String username, String password, UserType userType) {
+        if (username == null || password == null || userType == null) {
+            return null;
+        }
         return persist.getQuerySession()
                 .createQuery(
                         "FROM User u " +
