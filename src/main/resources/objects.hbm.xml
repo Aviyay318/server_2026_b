@@ -21,14 +21,6 @@
                 <param name="useNamed">true</param>
             </type>
         </property>
-
-<!--        <joined-subclass name="server_2026_b.server.entities.Employer" table="employers">-->
-<!--            <key column="user_id"/>-->
-<!--        </joined-subclass>-->
-
-<!--        <joined-subclass name="server_2026_b.server.entities.Employee" table="employees">-->
-<!--            <key column="user_id"/>-->
-<!--        </joined-subclass>-->
     </class>
 
 
