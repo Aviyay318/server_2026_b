@@ -22,13 +22,13 @@
             </type>
         </property>
 
-        <joined-subclass name="server_2026_b.server.entities.Employer" table="employers">
-            <key column="user_id"/>
-        </joined-subclass>
+<!--        <joined-subclass name="server_2026_b.server.entities.Employer" table="employers">-->
+<!--            <key column="user_id"/>-->
+<!--        </joined-subclass>-->
 
-        <joined-subclass name="server_2026_b.server.entities.Employee" table="employees">
-            <key column="user_id"/>
-        </joined-subclass>
+<!--        <joined-subclass name="server_2026_b.server.entities.Employee" table="employees">-->
+<!--            <key column="user_id"/>-->
+<!--        </joined-subclass>-->
     </class>
 
 
@@ -38,12 +38,13 @@
             <generator class="identity"/>
         </id>
         <many-to-one name="employer"
-                     class="server_2026_b.server.entities.Employer"
+                     class="server_2026_b.server.entities.User"
                      column="employer_id"
                      not-null="true"
                      unique-key="uk_employer_employee"/>
+
         <many-to-one name="employee"
-                     class="server_2026_b.server.entities.Employee"
+                     class="server_2026_b.server.entities.User"
                      column="employee_id"
                      not-null="true"
                      unique-key="uk_employer_employee"/>
