@@ -23,21 +23,6 @@ public class UserRepository {
         return persist.loadObject(User.class, userId);
     }
 
-    @Transactional
-    public Employee findEmployeeById(Long userId) {
-        if (userId == null) {
-            return null;
-        }
-        return persist.loadObject(Employee.class, userId);
-    }
-
-    @Transactional
-    public Employer findEmployerById(Long userId) {
-        if (userId == null) {
-            return null;
-        }
-        return persist.loadObject(Employer.class, userId);
-    }
 
     @Transactional
     public User findUserByUsernamePasswordAndType(String username, String password, UserType userType) {
@@ -55,25 +40,5 @@ public class UserRepository {
                 .uniqueResult();
     }
 
-    @Transactional
-    public Employee findEmployeeByUsernameAndPassword(String username, String password) {
-        User user = findUserByUsernamePasswordAndType(username, password, UserType.EMPLOYEE);
 
-        if (user == null) {
-            return null;
-        }
-
-        return findEmployeeById(user.getId());
-    }
-
-    @Transactional
-    public Employer findEmployerByUsernameAndPassword(String username, String password) {
-        User user = findUserByUsernamePasswordAndType(username, password, UserType.EMPLOYER);
-
-        if (user == null) {
-            return null;
-        }
-
-        return findEmployerById(user.getId());
-    }
 }
