@@ -107,4 +107,24 @@
             </type>
         </property>
     </class>
+
+    <class name="server_2026_b.server.entities.ArchivedEmployee" table="archived_employees">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="username"            column="username"               type="string" not-null="true"/>
+        <property name="firstName"           column="first_name"             type="string"/>
+        <property name="lastName"            column="last_name"              type="string"/>
+        <property name="password"            column="password"               type="string"/>
+        <property name="phone"               column="phone"                  type="string"/>
+        <property name="email"               column="email"                  type="string"/>
+        <property name="userType"            column="user_type">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.UserType</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="deletedAt"           column="deleted_at"             type="java.time.LocalDateTime"/>
+        <property name="deletedByEmployerId" column="deleted_by_employer_id" type="long"/>
+    </class>
 </hibernate-mapping>
