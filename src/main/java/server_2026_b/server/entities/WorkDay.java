@@ -1,5 +1,8 @@
 package server_2026_b.server.entities;
 
+import server_2026_b.server.utils.AbsenceReason;
+import server_2026_b.server.utils.ShiftStatus;
+
 import java.util.Date;
 
 public class WorkDay {
@@ -11,6 +14,8 @@ public class WorkDay {
     private String exitLocation;
     private WorkingSite enterSite;
     private WorkingSite exitSite;
+    private ShiftStatus status;
+    private AbsenceReason absenceReason;
     public WorkDay() {
     }
 
@@ -104,5 +109,21 @@ public class WorkDay {
 
     public void setExitLocation(String exitLocation) {
         this.exitLocation = exitLocation;
+    }
+
+    public ShiftStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ShiftStatus status) {
+        this.status = status;
+    }
+
+    public AbsenceReason getAbsenceReason() {
+        return absenceReason;
+    }
+
+    public void setAbsenceReason(AbsenceReason absenceReason) {
+        this.absenceReason = absenceReason;
     }
 }

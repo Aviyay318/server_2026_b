@@ -21,14 +21,6 @@
                 <param name="useNamed">true</param>
             </type>
         </property>
-
-        <joined-subclass name="server_2026_b.server.entities.Employer" table="employers">
-            <key column="user_id"/>
-        </joined-subclass>
-
-        <joined-subclass name="server_2026_b.server.entities.Employee" table="employees">
-            <key column="user_id"/>
-        </joined-subclass>
     </class>
 
 
@@ -38,12 +30,13 @@
             <generator class="identity"/>
         </id>
         <many-to-one name="employer"
-                     class="server_2026_b.server.entities.Employer"
+                     class="server_2026_b.server.entities.User"
                      column="employer_id"
                      not-null="true"
                      unique-key="uk_employer_employee"/>
+
         <many-to-one name="employee"
-                     class="server_2026_b.server.entities.Employee"
+                     class="server_2026_b.server.entities.User"
                      column="employee_id"
                      not-null="true"
                      unique-key="uk_employer_employee"/>
@@ -93,6 +86,39 @@
         <many-to-one name="exitSite"
                      class="server_2026_b.server.entities.WorkingSite"
                      column="exit_site_id"/>
+
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.ShiftStatus</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="absenceReason" column="absence_reason">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.AbsenceReason</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+    </class>
+
+    <class name="server_2026_b.server.entities.ArchivedEmployee" table="archived_employees">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="username"            column="username"               type="string" not-null="true"/>
+        <property name="firstName"           column="first_name"             type="string"/>
+        <property name="lastName"            column="last_name"              type="string"/>
+        <property name="password"            column="password"               type="string"/>
+        <property name="phone"               column="phone"                  type="string"/>
+        <property name="email"               column="email"                  type="string"/>
+        <property name="userType"            column="user_type">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.UserType</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="deletedAt"           column="deleted_at"             type="java.time.LocalDateTime"/>
+        <property name="deletedByEmployerId" column="deleted_by_employer_id" type="long"/>
     </class>
 
     <class name="server_2026_b.server.entities.Shift" table="shifts">
@@ -103,7 +129,7 @@
         <property name="startTime" column="start_time" type="timestamp" not-null="true"/>
         <property name="endTime" column="end_time" type="timestamp" not-null="true"/>
         <property name="location" column="location" type="string"/>
-        <many-to-one name="workingSite"
+        <many-to-one name="workSite"
                      class="server_2026_b.server.entities.WorkingSite"
                      column="worksite_id"
                      not-null="false"/>
