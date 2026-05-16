@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.ArchivedEmployee;
 import server_2026_b.server.entities.Employee;
+import server_2026_b.server.entities.User;
 import server_2026_b.server.entities.relations.EmploymentRelation;
 import server_2026_b.server.service.Persist;
 import server_2026_b.server.utils.ShiftStatus;
@@ -28,7 +29,7 @@ public class EmployeeRepository {
         return count != null && count > 0;
     }
 
-    public void saveEmployee(Employee employee) {
+    public void saveEmployee(User employee) {
         persist.save(employee);
     }
 
@@ -36,9 +37,9 @@ public class EmployeeRepository {
         persist.save(relation);
     }
 
-    public Employee findEmployeeById(Long employeeId) {
+    public User findEmployeeById(Long employeeId) {
         if (employeeId == null) return null;
-        return persist.loadObject(Employee.class, employeeId);
+        return persist.loadObject(User.class, employeeId);
     }
 
     public EmploymentRelation findRelation(Long employerId, Long employeeId) {
@@ -53,7 +54,7 @@ public class EmployeeRepository {
                 .uniqueResult();
     }
 
-    public List<Employee> findActiveEmployeesByEmployer(Long employerId) {
+    public List<User> findActiveEmployeesByEmployer(Long employerId) {
         return persist.getQuerySession()
                 .createQuery(
                         "SELECT er.employee FROM EmploymentRelation er " +
@@ -61,7 +62,7 @@ public class EmployeeRepository {
                         "AND er.employee.id IN (" +
                         "   SELECT wd.userId FROM WorkDay wd WHERE wd.status = :status" +
                         ")",
-                        Employee.class
+                        User.class
                 )
                 .setParameter("eid", employerId)
                 .setParameter("status", ShiftStatus.IN_PROGRESS)
@@ -75,7 +76,7 @@ public class EmployeeRepository {
                 .executeUpdate();
     }
 
-    public void deleteEmployee(Employee employee) {
+    public void deleteEmployee(User employee) {
         persist.remove(employee);
     }
 

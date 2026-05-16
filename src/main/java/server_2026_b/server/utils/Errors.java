@@ -21,5 +21,10 @@ public class Errors {
     public static final int ERROR_NOT_YOUR_EMPLOYEE = 6003;
     public static final int ERROR_CANNOT_DELETE_EMPLOYER = 6004;
 
+    public static final int ERROR_FETCHING_SHIFTS = 7001;
+    public static final int ERROR_SHIFT_NOT_FOUND = 7002;
+    public static final int ERROR_INVALID_DATE_FORMAT = 7003;
+
+
     public static final int ERROR_TEST_ADD_DATA_FAILED = 9001;
 }

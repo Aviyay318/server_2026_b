@@ -21,14 +21,6 @@
                 <param name="useNamed">true</param>
             </type>
         </property>
-
-        <joined-subclass name="server_2026_b.server.entities.Employer" table="employers">
-            <key column="user_id"/>
-        </joined-subclass>
-
-        <joined-subclass name="server_2026_b.server.entities.Employee" table="employees">
-            <key column="user_id"/>
-        </joined-subclass>
     </class>
 
 
@@ -38,12 +30,13 @@
             <generator class="identity"/>
         </id>
         <many-to-one name="employer"
-                     class="server_2026_b.server.entities.Employer"
+                     class="server_2026_b.server.entities.User"
                      column="employer_id"
                      not-null="true"
                      unique-key="uk_employer_employee"/>
+
         <many-to-one name="employee"
-                     class="server_2026_b.server.entities.Employee"
+                     class="server_2026_b.server.entities.User"
                      column="employee_id"
                      not-null="true"
                      unique-key="uk_employer_employee"/>
@@ -127,4 +120,21 @@
         <property name="deletedAt"           column="deleted_at"             type="java.time.LocalDateTime"/>
         <property name="deletedByEmployerId" column="deleted_by_employer_id" type="long"/>
     </class>
+
+    <class name="server_2026_b.server.entities.Shift" table="shifts">
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+        <property name="userId" column="user_id" type="java.lang.Long" not-null="true"/>
+        <property name="startTime" column="start_time" type="timestamp" not-null="true"/>
+        <property name="endTime" column="end_time" type="timestamp" not-null="true"/>
+        <property name="location" column="location" type="string"/>
+        <many-to-one name="workSite"
+                     class="server_2026_b.server.entities.WorkingSite"
+                     column="worksite_id"
+                     not-null="false"/>
+        <property name="position" column="position" type="string"/>
+    </class>
+                     
+
 </hibernate-mapping>

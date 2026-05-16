@@ -11,13 +11,9 @@ public class LoginResponse extends BasicResponse {
 
     private UserType userType;
 
-    public LoginResponse(Integer errorCode, boolean success, String message, String token, UserType userType) {
+    public LoginResponse(Integer errorCode, boolean success, String message) {
         super(success, errorCode);
         this.message = message;
-        this.token = token;
-        this.accessToken = token;
-        this.refreshToken = null;
-        this.userType = userType;
     }
 
     public LoginResponse(Integer errorCode, boolean success, String message,

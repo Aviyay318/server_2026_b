@@ -3,8 +3,8 @@ package server_2026_b.server.service;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import server_2026_b.server.entities.Employee;
-import server_2026_b.server.entities.Employer;
+
+import server_2026_b.server.entities.User;
 import server_2026_b.server.entities.WorkingSite;
 import server_2026_b.server.utils.GenerateHash;
 import server_2026_b.server.utils.UserType;
@@ -32,7 +32,7 @@ public class TestService {
 
     private void createEmployees() {
         for (int i = 1; i <= 3; i++) {
-            Employee emp = new Employee();
+            User emp = new User();
             emp.setFirstName(faker.name().firstName());
             emp.setLastName(faker.name().lastName());
             emp.setPhone(faker.phoneNumber().cellPhone());
@@ -47,7 +47,7 @@ public class TestService {
 
     private void createEmployers() {
         for (int i = 1; i <= 2; i++) {
-            Employer emp = new Employer();
+            User emp = new User();
             emp.setFirstName(faker.name().firstName());
             emp.setLastName(faker.name().lastName());
             emp.setPhone(faker.phoneNumber().cellPhone());

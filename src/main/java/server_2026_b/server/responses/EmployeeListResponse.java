@@ -1,13 +1,13 @@
 package server_2026_b.server.responses;
 
-import server_2026_b.server.entities.Employee;
+import server_2026_b.server.entities.User;
 import java.util.List;
 
 public class EmployeeListResponse extends BasicResponse {
 
-    private List<Employee> employees;
+    private List<User> employees;
 
-    public EmployeeListResponse(boolean success, List<Employee> employees) {
+    public EmployeeListResponse(boolean success, List<User> employees) {
         super(success, null);
         this.employees = employees;
     }
@@ -16,6 +16,6 @@ public class EmployeeListResponse extends BasicResponse {
         super(success, errorCode);
     }
 
-    public List<Employee> getEmployees() { return employees; }
-    public void setEmployees(List<Employee> employees) { this.employees = employees; }
+    public List<User> getEmployees() { return employees; }
+    public void setEmployees(List<User> employees) { this.employees = employees; }
 }

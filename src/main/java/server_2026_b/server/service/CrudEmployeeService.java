@@ -3,8 +3,7 @@ package server_2026_b.server.service;
 import org.springframework.stereotype.Service;
 import server_2026_b.server.database.EmployeeRepository;
 import server_2026_b.server.entities.ArchivedEmployee;
-import server_2026_b.server.entities.Employee;
-import server_2026_b.server.entities.Employer;
+import server_2026_b.server.entities.User;
 import server_2026_b.server.entities.relations.EmploymentRelation;
 import server_2026_b.server.requests.CreateEmployeeRequest;
 import server_2026_b.server.responses.BasicResponse;
@@ -28,16 +27,16 @@ public class CrudEmployeeService {
     }
 
     public EmployeeListResponse getAllActive(String token) {
-        Employer employer = userService.getEmployerByAccessToken(token);
+        User employer = userService.getEmployerByAccessToken(token);
         if (employer == null)
             return new EmployeeListResponse(false, Errors.ERROR_INVALID_TOKEN);
 
-        List<Employee> active = employeeRepository.findActiveEmployeesByEmployer(employer.getId());
+        List<User> active = employeeRepository.findActiveEmployeesByEmployer(employer.getId());
         return new EmployeeListResponse(true, active);
     }
 
     public BasicResponse createEmployee(String token, CreateEmployeeRequest req) {
-        Employer employer = userService.getEmployerByAccessToken(token);
+        User employer = userService.getEmployerByAccessToken(token);
         if (employer == null)
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
 
@@ -48,7 +47,7 @@ public class CrudEmployeeService {
         if (employeeRepository.existsByUsername(req.getUsername()))
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_ALREADY_EXISTS);
 
-        Employee employee = new Employee(
+        User employee = new User(
                 req.getUsername(),
                 req.getFirstName(),
                 req.getLastName(),
@@ -65,14 +64,14 @@ public class CrudEmployeeService {
     }
 
     public BasicResponse deleteEmployee(String token, Long employeeId) {
-        Employer employer = userService.getEmployerByAccessToken(token);
+        User employer = userService.getEmployerByAccessToken(token);
         if (employer == null)
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
 
         if (employer.getId().equals(employeeId))
             return new BasicResponse(false, Errors.ERROR_CANNOT_DELETE_EMPLOYER);
 
-        Employee employee = employeeRepository.findEmployeeById(employeeId);
+        User employee = employeeRepository.findEmployeeById(employeeId);
         if (employee == null)
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_NOT_FOUND);
 
