@@ -1,22 +1,19 @@
 package server_2026_b.server.entities.relations;
 
-import server_2026_b.server.entities.Employee;
-import server_2026_b.server.entities.Employer;
+import server_2026_b.server.entities.User;
 
 public class EmploymentRelation {
 
     private Long id;
-    private Employer employer;
-    private Employee employee;
-
+    private User employer;
+    private User employee;
 
     public EmploymentRelation() {
     }
 
-    public EmploymentRelation(Employer employer, Employee employee) {
+    public EmploymentRelation(User employer, User employee) {
         this.employer = employer;
         this.employee = employee;
-
     }
 
     public Long getId() {
@@ -27,21 +24,19 @@ public class EmploymentRelation {
         this.id = id;
     }
 
-    public Employer getEmployer() {
+    public User getEmployer() {
         return employer;
     }
 
-    public void setEmployer(Employer employer) {
+    public void setEmployer(User employer) {
         this.employer = employer;
     }
 
-    public Employee getEmployee() {
+    public User getEmployee() {
         return employee;
     }
 
-    public void setEmployee(Employee employee) {
+    public void setEmployee(User employee) {
         this.employee = employee;
     }
-
-
 }

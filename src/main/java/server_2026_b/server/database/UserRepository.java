@@ -2,8 +2,6 @@ package server_2026_b.server.database;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import server_2026_b.server.entities.Employee;
-import server_2026_b.server.entities.Employer;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.service.Persist;
 import server_2026_b.server.utils.UserType;
@@ -24,23 +22,10 @@ public class UserRepository {
     }
 
     @Transactional
-    public Employee findEmployeeById(Long userId) {
-        if (userId == null) {
-            return null;
-        }
-        return persist.loadObject(Employee.class, userId);
-    }
-
-    @Transactional
-    public Employer findEmployerById(Long userId) {
-        if (userId == null) {
-            return null;
-        }
-        return persist.loadObject(Employer.class, userId);
-    }
-
-    @Transactional
     public User findUserByUsernamePasswordAndType(String username, String password, UserType userType) {
+        if (username == null || password == null || userType == null) {
+            return null;
+        }
         return persist.getQuerySession()
                 .createQuery(
                         "FROM User u " +
@@ -55,25 +40,5 @@ public class UserRepository {
                 .uniqueResult();
     }
 
-    @Transactional
-    public Employee findEmployeeByUsernameAndPassword(String username, String password) {
-        User user = findUserByUsernamePasswordAndType(username, password, UserType.EMPLOYEE);
 
-        if (user == null) {
-            return null;
-        }
-
-        return findEmployeeById(user.getId());
-    }
-
-    @Transactional
-    public Employer findEmployerByUsernameAndPassword(String username, String password) {
-        User user = findUserByUsernamePasswordAndType(username, password, UserType.EMPLOYER);
-
-        if (user == null) {
-            return null;
-        }
-
-        return findEmployerById(user.getId());
-    }
 }
