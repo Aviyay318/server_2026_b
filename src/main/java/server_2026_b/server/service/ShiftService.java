@@ -1,13 +1,13 @@
 package server_2026_b.server.service;
 import server_2026_b.server.database.ShiftRepository;
 import server_2026_b.server.entities.Shift;
-import server_2026_b.server.entities.Employee;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import server_2026_b.server.entities.User;
 import server_2026_b.server.responses.ShiftResponse;
 import server_2026_b.server.utils.Errors;
 
@@ -22,7 +22,7 @@ public class ShiftService {
     }
 
     public ShiftResponse getWeeklyShifts(String accessToken,String fromDate, String toDate) {
-        Employee employee = userService.getEmployeeByAccessToken(accessToken);
+        User employee = userService.getEmployeeByAccessToken(accessToken);
         if(employee == null){
             return new ShiftResponse(false, Errors.ERROR_INVALID_TOKEN, null);
         }
