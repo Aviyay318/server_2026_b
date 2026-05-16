@@ -3,7 +3,6 @@ package server_2026_b.server.database;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.ArchivedEmployee;
-import server_2026_b.server.entities.Employee;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.entities.relations.EmploymentRelation;
 import server_2026_b.server.service.Persist;
