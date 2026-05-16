@@ -92,6 +92,7 @@ public class WorkDayService {
         open.setExitTime(endTime);
         open.setExitSite(site);
         open.setExitLocation(request.getLocation());
+        open.setStatus(ShiftStatus.FINISHED);
         workDayRepository.save(open);
         return new BasicResponse(true, null);
     }
