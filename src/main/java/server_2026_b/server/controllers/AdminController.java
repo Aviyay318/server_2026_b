@@ -17,27 +17,28 @@ public class AdminController {
     }
 
     @GetMapping("/general-info")
-    public BasicResponse generalInfo() {
-        return new AdminResponse(true , null ,adminService.getAllUsers());
+    public BasicResponse generalInfo(@CookieValue(value = "accessToken", required = false) String token) {
+        return adminService.getAllUsers(token);
     }
 
     // return list of just all Employers
     @GetMapping("/employers-list")
-    public BasicResponse employersList() {
-        return new AdminResponse(true , null , adminService.getAllEmployers());
+    public BasicResponse employersList(@CookieValue(value = "accessToken", required = false) String token) {
+        return adminService.getAllEmployers(token);
     }
 
     // return all Employee of an Employer by id
     @GetMapping("/employer-worker")
-    public BasicResponse employerWorker(@RequestParam Long employerId) {
-        return new AdminResponse(true , null , adminService.getEmployeesByEmployerId(employerId));
+    public BasicResponse employerWorker(@CookieValue(value = "accessToken", required = false) String token ,
+            @RequestParam Long employerId) {
+        return adminService.getEmployeesByEmployerId(token, employerId);
     }
 
     // List of active users ( Employees and Employers ) has valid token
     //check in refresh_token expair_at and userType (not to be Admin)
     @GetMapping("/realtime-info")
-    public BasicResponse realtimeInfo() {
+    public BasicResponse realtimeInfo(@CookieValue(value = "accessToken", required = false) String token) {
         // כאן אנחנו מחזירים list של משתמשים פעילים (מי שהטוקן שלו בתוקף והוא לא אדמין)
-        return new AdminResponse(true , null , adminService.getActiveUsers());
+        return adminService.getActiveUsers(token);
     }
 }

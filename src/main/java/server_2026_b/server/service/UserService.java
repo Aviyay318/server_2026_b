@@ -57,4 +57,8 @@ public class UserService {
     public User getEmployerByAccessToken(String accessToken) {
         return getUserByAccessTokenAndType(accessToken, UserType.EMPLOYER);
     }
+
+    public User getAdminByAccessToken(String accessToken) {
+        return getUserByAccessTokenAndType(accessToken, UserType.ADMIN);
+    }
 }
