@@ -1,4 +1,5 @@
 package server_2026_b.server.database;
+import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.service.Persist;
 import org.springframework.stereotype.Repository;
 import server_2026_b.server.entities.Shift;
@@ -6,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
+@Transactional
 public class ShiftRepository {
 
     private final Persist persist;
