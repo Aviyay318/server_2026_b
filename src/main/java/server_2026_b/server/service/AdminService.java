@@ -3,32 +3,56 @@ package server_2026_b.server.service;
 import org.springframework.stereotype.Service;
 import server_2026_b.server.database.AdminRepository;
 import server_2026_b.server.entities.User;
+import server_2026_b.server.responses.AdminResponse;
+import server_2026_b.server.utils.Errors;
+import server_2026_b.server.utils.UserType;
 
-import java.time.LocalDateTime;
-import java.util.List;
+
+
 
 @Service
 public class AdminService {
-
+    private final UserService userService;
     private final AdminRepository adminRepository;
 
-    public AdminService(AdminRepository adminRepository) {
+    public AdminService(AdminRepository adminRepository ,UserService userService) {
         this.adminRepository = adminRepository;
+        this.userService = userService;
     }
 
-    public List<User> getAllUsers() {
-        return adminRepository.findAllGeneralUsers();
+    private User validateAdmin(String token) {
+        User user = userService.getAdminByAccessToken(token);
+        if (user != null && user.getUserType() == UserType.ADMIN) {
+            return user;
+        }
+        return null;
     }
 
-    public List<User> getAllEmployers() {
-        return adminRepository.findAllEmployers();
+    public AdminResponse getAllUsers(String token) {
+        if (validateAdmin(token) == null) {
+            return new AdminResponse(false, Errors.ERROR_INVALID_TOKEN, "Unauthorized");
+        }
+        return new AdminResponse(true, null, adminRepository.findAllGeneralUsers());
     }
 
-    public List<User> getEmployeesByEmployerId(Long employerId) {
-        return adminRepository.findEmployeesByEmployerId(employerId);
+    public AdminResponse getAllEmployers(String token) {
+        if (validateAdmin(token) == null) {
+            return new AdminResponse(false, Errors.ERROR_INVALID_TOKEN, "Unauthorized");
+        }
+        return new AdminResponse(true, null, adminRepository.findAllEmployers());
     }
 
-    public List<User> getActiveUsers() {
-        return adminRepository.findAllActiveUsers();
+    public AdminResponse getEmployeesByEmployerId(String token, Long employerId) {
+        if (validateAdmin(token) == null) {
+            return new AdminResponse(false, Errors.ERROR_INVALID_TOKEN, "Unauthorized");
+        }
+        return new AdminResponse(true, null, adminRepository.findEmployeesByEmployerId(employerId));
+    }
+
+    public AdminResponse getActiveUsers(String token) {
+        if (validateAdmin(token) == null) {
+            return new AdminResponse(false, Errors.ERROR_INVALID_TOKEN, "Unauthorized");
+        }
+        return new AdminResponse(true, null, adminRepository.findAllActiveUsers());
     }
 }
