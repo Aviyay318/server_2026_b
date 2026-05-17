@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AdminResponse extends BasicResponse {
 
-    private List<User> users; //מחזיר רשימת עובדים או מעסיקים
+    private List<AdminUserDTO> users;
 
     public AdminResponse() {
     }
@@ -16,16 +16,16 @@ public class AdminResponse extends BasicResponse {
         super(success , errorCode);
     }
 
-    public AdminResponse(boolean success, Integer errorCode, List<User> users){
+    public AdminResponse(boolean success, Integer errorCode, List<AdminUserDTO> users){
         super(success , errorCode);
         this.users = users;
     }
 
-    public List<User> getUsers() {
+    public List<AdminUserDTO> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<AdminUserDTO> users) {
         this.users = users;
     }
 }
