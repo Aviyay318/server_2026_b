@@ -21,17 +21,20 @@ public class TestService {
     private Persist persist;
     Faker faker = new Faker(new Locale("en", "US"));
 
+    private final int NUMBER_OF_EMPLOYEES = 3;
+    private final int NUMBER_OF_EMPLOYERS = 2;
+    private final int NUMBER_OF_ADMINS = 1;
+    private final int NUMBER_OF_WORKING_SITES = 3;
+
     public void addData() {
-        // 1. יצירת 3 Employees
-        createEmployees();
-        // 2. יצירת 2 Employers
-        createEmployers();
-        // 3. יצירת 3 WorkingSites
-        createWorkingSites();
+//        createEmployees();
+//        createEmployers();
+//        createWorkingSites();
+        createAdmin();
     }
 
     private void createEmployees() {
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= NUMBER_OF_EMPLOYEES; i++) {
             User emp = new User();
             emp.setFirstName(faker.name().firstName());
             emp.setLastName(faker.name().lastName());
@@ -46,7 +49,7 @@ public class TestService {
     }
 
     private void createEmployers() {
-        for (int i = 1; i <= 2; i++) {
+        for (int i = 1; i <= NUMBER_OF_EMPLOYERS; i++) {
             User emp = new User();
             emp.setFirstName(faker.name().firstName());
             emp.setLastName(faker.name().lastName());
@@ -60,8 +63,23 @@ public class TestService {
         }
     }
 
+    private void createAdmin() {
+        for (int i = 1; i <= NUMBER_OF_ADMINS; i++) {
+            User emp = new User();
+            emp.setFirstName(faker.name().firstName());
+            emp.setLastName(faker.name().lastName());
+            emp.setPhone(faker.phoneNumber().cellPhone());
+            emp.setUserType(UserType.ADMIN);
+            emp.setUsername(emp.getFirstName());
+            emp.setPassword(generateHashPassword(emp.getUsername(), "1234"));
+            emp.setEmail("employer-" + emp.getFirstName() + "@test.com");
+
+            persist.save(emp);
+        }
+    }
+
     private void createWorkingSites() {
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= NUMBER_OF_WORKING_SITES; i++) {
             WorkingSite workingSite = new WorkingSite();
             workingSite.setName(faker.company().name());
             workingSite.setAddress(faker.address().city());
