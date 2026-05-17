@@ -32,6 +32,10 @@ public class AuthService {
         return loginUser(username, password, UserType.EMPLOYER);
     }
 
+    public LoginResponse loginAdmin(String username, String password) {
+        return loginUser(username, password, UserType.ADMIN);
+    }
+
 
     private LoginResponse loginUser(String username, String password, UserType userType) {
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()

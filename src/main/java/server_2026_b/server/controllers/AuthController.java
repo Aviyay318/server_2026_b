@@ -51,6 +51,21 @@ public class AuthController {
         return loginResponse;
     }
 
+    @PostMapping("/login-admin")
+    public LoginResponse loginAdmin(@RequestBody LoginRequest request,
+                                       HttpServletResponse response) {
+        LoginResponse loginResponse = authService.loginAdmin(
+                request.getUsername(), request.getPassword());
+
+        if (loginResponse.isSuccess()) {
+            CookieUtils.setAuthCookies(response,
+                    loginResponse.getAccessToken(),
+                    loginResponse.getRefreshToken());
+            stripTokensFromBody(loginResponse);
+        }
+        return loginResponse;
+    }
+
     @PostMapping("/logout")
     public BasicResponse logoutUser(
             @CookieValue(value = "accessToken", required = false) String token,
