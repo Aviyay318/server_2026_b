@@ -23,6 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <hibernate.version>5.4.32.Final</hibernate.version>
+        <groovy.version>3.0.9</groovy.version>
     </properties>
 
     <dependencies>
@@ -94,11 +95,22 @@
             <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- Latest version from com.github.javafaker -->
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
             <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

@@ -9,7 +9,9 @@ import server_2026_b.server.entities.WorkingSite;
 import server_2026_b.server.utils.GenerateHash;
 import server_2026_b.server.utils.UserType;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 //  סיסמה עבור כל משתמש: 1234
 // שם משתמש מוצג ב DB
@@ -27,9 +29,9 @@ public class TestService {
     private final int NUMBER_OF_WORKING_SITES = 3;
 
     public void addData() {
-//        createEmployees();
-//        createEmployers();
-//        createWorkingSites();
+        createEmployees();
+        createEmployers();
+        createWorkingSites();
         createAdmin();
     }
 
@@ -70,9 +72,9 @@ public class TestService {
             emp.setLastName(faker.name().lastName());
             emp.setPhone(faker.phoneNumber().cellPhone());
             emp.setUserType(UserType.ADMIN);
-            emp.setUsername(emp.getFirstName());
+            emp.setUsername("admin");
             emp.setPassword(generateHashPassword(emp.getUsername(), "1234"));
-            emp.setEmail("employer-" + emp.getFirstName() + "@test.com");
+            emp.setEmail("admin-" + emp.getFirstName() + "@test.com");
 
             persist.save(emp);
         }
