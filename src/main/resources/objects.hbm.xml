@@ -47,7 +47,7 @@
         <id name="id" column="id" type="java.lang.Long">
             <generator class="identity"/>
         </id>
-        <property name="token" column="token" type="string" not-null="true" unique="true"/>
+        <property name="token" column="token" type="string" length="1024" not-null="true" unique="true"/>
         <property name="userId" column="user_id" type="java.lang.Long" not-null="true" unique="true"/>
         <property name="userType" column="user_type" not-null="true">
             <type name="org.hibernate.type.EnumType">

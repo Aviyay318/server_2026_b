@@ -44,4 +44,10 @@ public class Persist {
         return sessionFactory.getCurrentSession()
                 .createQuery("FROM " + clazz.getSimpleName()).list();
     }
+
+    public void deleteAll(Class<?> clazz) {
+        sessionFactory.getCurrentSession()
+                .createQuery("DELETE FROM " + clazz.getSimpleName())
+                .executeUpdate();
+    }
 }
