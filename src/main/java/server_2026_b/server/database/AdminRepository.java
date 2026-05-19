@@ -57,4 +57,35 @@ public class AdminRepository {
                 .setParameter("adminType", UserType.ADMIN)
                 .list();
     }
+
+    public boolean existsById(String id) { // עם סטרינג ת״ז במקום יוזרניים
+        Long count = persist.getQuerySession()
+                .createQuery(
+                        "SELECT COUNT(u) FROM User u " +
+                                "WHERE u.id = :id AND u.userType = :userType",
+                        Long.class
+                )
+                .setParameter("id", id)
+                .setParameter("userType", UserType.EMPLOYER)
+                .uniqueResult();
+        return count != null && count > 0;
+    }
+
+    public void saveEmployer(User employer) {persist.save(employer);}
+
+    public User findEmployerById(String employerId) {
+        if (employerId == null) return null;
+        return persist.loadObject(User.class, employerId); // צריך לשנות שהמתודה תקבל סטרינג במקום לונג
+    }
+
+    public void deleteAllRelationsForEmployer(String employerId) { // לפי סטרינג ת״ז
+        persist.getQuerySession()
+                .createQuery("DELETE FROM EmploymentRelation er WHERE er.employer.id = :uid")
+                .setParameter("uid", employerId)
+                .executeUpdate();
+    }
+
+    public void deleteEmployer(User employer) {persist.remove(employer);}
+
+    // לא צריך ארכיון מעסיקים - רלוונטי רק עבור עובדים
 }
