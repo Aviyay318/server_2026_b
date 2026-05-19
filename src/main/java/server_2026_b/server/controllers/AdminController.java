@@ -1,6 +1,7 @@
 package server_2026_b.server.controllers;
 
 import org.springframework.web.bind.annotation.*;
+import server_2026_b.server.requests.CreateEmployerRequest;
 import server_2026_b.server.responses.AdminResponse;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.service.AdminService;
@@ -35,5 +36,19 @@ public class AdminController {
     public BasicResponse realtimeInfo(@CookieValue(value = "accessToken", required = false) String token) {
         // כאן אנחנו מחזירים list של משתמשים פעילים (מי שהטוקן שלו בתוקף והוא לא אדמין)
         return adminService.getActiveUsers(token);
+    }
+
+    @PostMapping("/create-employer")
+    public BasicResponse createEmployer(
+            @CookieValue(value = "accessToken", required = false) String token,
+            @RequestBody CreateEmployerRequest request) { // מעסיק עם ת״ז כסטרינג
+        return adminService.createEmployer(token, request);
+    }
+
+    @DeleteMapping("/delete-employer")
+    public BasicResponse deleteEmployer(
+            @CookieValue(value = "accessToken", required = false) String token,
+            @RequestParam String employerId) { // יקבל ת״ז כסטרינג
+        return adminService.deleteEmployer(token, employerId);
     }
 }
