@@ -2,7 +2,8 @@ package server_2026_b.server.requests;
 
 public class CreateEmployerRequest {
     private String id; // במקום יוזרניים
-    private String companyName;
+    private String firstName;
+    private String lastName;
     private String password;
     private String phone;
     private String email;
@@ -15,13 +16,11 @@ public class CreateEmployerRequest {
         this.id = id;
     }
 
-    public String getCompanyName() {
-        return companyName;
-    }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
     public String getPassword() {
         return password;
