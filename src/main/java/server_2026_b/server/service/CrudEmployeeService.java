@@ -10,6 +10,7 @@ import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.EmployeeListResponse;
 import server_2026_b.server.utils.Errors;
 import server_2026_b.server.utils.GenerateHash;
+import server_2026_b.server.utils.IdValidator;
 import server_2026_b.server.utils.UserType;
 
 import java.time.LocalDateTime;
@@ -40,18 +41,23 @@ public class CrudEmployeeService {
         if (employer == null)
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
 
-        if (isBlank(req.getUsername()) || isBlank(req.getFirstName()) ||
+        if (isBlank(req.getPersonalId()) || isBlank(req.getFirstName()) ||
             isBlank(req.getLastName())  || isBlank(req.getPassword()))
             return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
 
-        if (employeeRepository.existsByUsername(req.getUsername()))
+        if (!IdValidator.checkID(req.getPersonalId()))
+            return new BasicResponse(false, Errors.ERROR_INVALID_ID);
+
+        String normalizedPersonalId = IdValidator.normalize(req.getPersonalId());
+
+        if (employeeRepository.existsByPersonalId(normalizedPersonalId))
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_ALREADY_EXISTS);
 
         User employee = new User(
-                req.getUsername(),
+                normalizedPersonalId,
                 req.getFirstName(),
                 req.getLastName(),
-                GenerateHash.hashMd5(req.getUsername(), req.getPassword()),
+                GenerateHash.hashMd5(normalizedPersonalId, req.getPassword()),
                 req.getPhone(),
                 req.getEmail(),
                 UserType.EMPLOYEE
@@ -75,12 +81,15 @@ public class CrudEmployeeService {
         if (employee == null)
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_NOT_FOUND);
 
+        if (!IdValidator.checkID(employee.getPersonalId()))
+            return new BasicResponse(false, Errors.ERROR_INVALID_ID);
+
         EmploymentRelation relation = employeeRepository.findRelation(employer.getId(), employeeId);
         if (relation == null)
             return new BasicResponse(false, Errors.ERROR_NOT_YOUR_EMPLOYEE);
 
         ArchivedEmployee archived = new ArchivedEmployee();
-        archived.setUsername(employee.getUsername());
+        archived.setPersonalId(employee.getPersonalId());
         archived.setFirstName(employee.getFirstName());
         archived.setLastName(employee.getLastName());
         archived.setPassword(employee.getPassword());

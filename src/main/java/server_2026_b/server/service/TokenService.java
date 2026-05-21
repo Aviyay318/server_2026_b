@@ -3,6 +3,7 @@ package server_2026_b.server.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.database.RefreshTokenRepository;
+import server_2026_b.server.database.UserRepository;
 import server_2026_b.server.entities.RefreshToken;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.security.JwtService;
@@ -16,11 +17,14 @@ public class TokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     public TokenService(RefreshTokenRepository refreshTokenRepository,
-                        JwtService jwtService) {
+                        JwtService jwtService,
+                        UserRepository userRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
         this.jwtService = jwtService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -94,12 +98,13 @@ public class TokenService {
     public String refreshAccessToken(String refreshTokenValue) {
         RefreshToken refreshToken = getValidRefreshToken(refreshTokenValue);
         if (refreshToken == null) {
-            return null;}
-        User fakeUser = new User();
-        fakeUser.setId(refreshToken.getUserId());
-        fakeUser.setUserType(refreshToken.getUserType());
-        fakeUser.setUsername(String.valueOf(refreshToken.getUserId()));
-        return jwtService.generateAccessToken(fakeUser);
+            return null;
+        }
+        User user = userRepository.findUserById(refreshToken.getUserId());
+        if (user == null) {
+            return null;
+        }
+        return jwtService.generateAccessToken(user);
     }
 
     public boolean deleteIfInvalid(RefreshToken refreshToken) {

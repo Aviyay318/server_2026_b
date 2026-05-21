@@ -25,7 +25,7 @@ public class AuthController {
     public LoginResponse loginEmployee(@RequestBody LoginRequest request,
                                        HttpServletResponse response) {
         LoginResponse loginResponse = authService.loginEmployee(
-                request.getUsername(), request.getPassword());
+                request.getPersonalId(), request.getPassword());
 
         if (loginResponse.isSuccess()) {
             CookieUtils.setAuthCookies(response,
@@ -40,7 +40,7 @@ public class AuthController {
     public LoginResponse loginEmployer(@RequestBody LoginRequest request,
                                        HttpServletResponse response) {
         LoginResponse loginResponse = authService.loginEmployer(
-                request.getUsername(), request.getPassword());
+                request.getPersonalId(), request.getPassword());
 
         if (loginResponse.isSuccess()) {
             CookieUtils.setAuthCookies(response,
@@ -55,7 +55,7 @@ public class AuthController {
     public LoginResponse loginAdmin(@RequestBody LoginRequest request,
                                        HttpServletResponse response) {
         LoginResponse loginResponse = authService.loginAdmin(
-                request.getUsername(), request.getPassword());
+                request.getPersonalId(), request.getPassword());
 
         if (loginResponse.isSuccess()) {
             CookieUtils.setAuthCookies(response,
