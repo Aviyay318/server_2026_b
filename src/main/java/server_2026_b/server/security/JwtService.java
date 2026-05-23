@@ -26,7 +26,7 @@ public class JwtService {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + jwtConfig.getAccessExpiration());
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(user.getPersonalId())
                 .claim(Constants.USER_ID, user.getId())
                 .claim(Constants.USER_TYPE, user.getUserType().toString())
                 .claim(Constants.TOKEN_TYPE, Constants.ACCESS_TOKEN)
@@ -40,7 +40,7 @@ public class JwtService {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + jwtConfig.getRefreshExpiration());
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(user.getPersonalId())
                 .claim(Constants.USER_ID, user.getId())
                 .claim(Constants.USER_TYPE, user.getUserType().toString())
                 .claim(Constants.TOKEN_TYPE, Constants.REFRESH_TOKEN)
@@ -62,7 +62,7 @@ public class JwtService {
         return extractAllClaims(token).get(Constants.USER_ID, Long.class);
     }
 
-    public String extractUsername(String token) {
+    public String extractPersonalIdSubject(String token) {
         return extractAllClaims(token).getSubject();
     }
 

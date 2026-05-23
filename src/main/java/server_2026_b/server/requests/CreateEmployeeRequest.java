@@ -2,15 +2,15 @@ package server_2026_b.server.requests;
 
 public class CreateEmployeeRequest {
 
-    private String username;
+    private String personalId;
     private String firstName;
     private String lastName;
     private String password;
     private String phone;
     private String email;
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getPersonalId() { return personalId; }
+    public void setPersonalId(String personalId) { this.personalId = personalId; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }

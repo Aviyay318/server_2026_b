@@ -22,19 +22,19 @@ public class UserRepository {
     }
 
     @Transactional
-    public User findUserByUsernamePasswordAndType(String username, String password, UserType userType) {
-        if (username == null || password == null || userType == null) {
+    public User findUserByPersonalIdPasswordAndType(String personalId, String password, UserType userType) {
+        if (personalId == null || password == null || userType == null) {
             return null;
         }
         return persist.getQuerySession()
                 .createQuery(
                         "FROM User u " +
-                                "WHERE u.username = :username " +
+                                "WHERE u.personalId = :personalId " +
                                 "AND u.password = :password " +
                                 "AND u.userType = :userType",
                         User.class
                 )
-                .setParameter("username", username)
+                .setParameter("personalId", personalId)
                 .setParameter("password", password)
                 .setParameter("userType", userType)
                 .uniqueResult();

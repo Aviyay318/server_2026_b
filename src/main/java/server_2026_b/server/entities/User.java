@@ -4,7 +4,7 @@ import server_2026_b.server.utils.UserType;
 
 public class User {
     private Long id;
-    private String username;
+    private String personalId;
     private String firstName;
     private String lastName;
     private String password;
@@ -16,8 +16,8 @@ public class User {
     public User() {
     }
 
-    public User(String username, String firstName, String lastName, String password, String phone, String email, UserType userType) {
-        this.username = username;
+    public User(String personalId, String firstName, String lastName, String password, String phone, String email, UserType userType) {
+        this.personalId = personalId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -34,12 +34,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPersonalId() {
+        return personalId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPersonalId(String personalId) {
+        this.personalId = personalId;
     }
 
     public String getFirstName() {
@@ -90,7 +90,3 @@ public class User {
         this.userType = userType;
     }
 }
-
-
-
-

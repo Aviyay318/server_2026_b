@@ -8,7 +8,7 @@
         <id name="id" column="id" type="long">
             <generator class="identity"/>
         </id>
-        <property name="username" column="username" type="string" not-null="true"/>
+        <property name="personalId" column="personal_id" type="string" length="9" not-null="true" unique="true"/>
         <property name="firstName" column="first_name" type="string"/>
         <property name="lastName" column="last_name" type="string"/>
         <property name="password" column="password" type="string" not-null="true"/>
@@ -105,7 +105,7 @@
         <id name="id" column="id" type="long">
             <generator class="identity"/>
         </id>
-        <property name="username"            column="username"               type="string" not-null="true"/>
+        <property name="personalId"          column="personal_id"            type="string" length="9" not-null="true"/>
         <property name="firstName"           column="first_name"             type="string"/>
         <property name="lastName"            column="last_name"              type="string"/>
         <property name="password"            column="password"               type="string"/>
