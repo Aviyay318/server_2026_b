@@ -1,13 +1,11 @@
 package server_2026_b.server.responses;
 
 
-import server_2026_b.server.entities.User;
-
 import java.util.List;
 
 public class AdminResponse extends BasicResponse {
 
-    private List<AdminUserDTO> users;
+    private List<UserDTO> users;
 
     public AdminResponse() {
     }
@@ -16,16 +14,16 @@ public class AdminResponse extends BasicResponse {
         super(success , errorCode);
     }
 
-    public AdminResponse(boolean success, Integer errorCode, List<AdminUserDTO> users){
+    public AdminResponse(boolean success, Integer errorCode, List<UserDTO> users){
         super(success , errorCode);
         this.users = users;
     }
 
-    public List<AdminUserDTO> getUsers() {
+    public List<UserDTO> getUsers() {
         return users;
     }
 
-    public void setUsers(List<AdminUserDTO> users) {
+    public void setUsers(List<UserDTO> users) {
         this.users = users;
     }
 }

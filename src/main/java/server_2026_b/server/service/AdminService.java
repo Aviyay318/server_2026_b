@@ -5,7 +5,7 @@ import server_2026_b.server.database.AdminRepository;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.requests.CreateEmployerRequest;
 import server_2026_b.server.responses.AdminResponse;
-import server_2026_b.server.responses.AdminUserDTO;
+import server_2026_b.server.responses.UserDTO;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.utils.Errors;
 import server_2026_b.server.utils.GenerateHash;
@@ -34,10 +34,10 @@ public class AdminService {
         return null;
     }
 
-    // הופך רשימת User לרשימת AdminUserDTO
-    private List<AdminUserDTO> convertToDtoList(List<User> users) {
+    // הופך רשימת User לרשימת UserDTO
+    private List<UserDTO> convertToDtoList(List<User> users) {
         return users.stream()
-                .map(AdminUserDTO::new)
+                .map(UserDTO::new)
                 .collect(Collectors.toList());
     }
 

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import server_2026_b.server.requests.CreateEmployeeRequest;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.EmployeeListResponse;
+import server_2026_b.server.responses.EmployeeResponse;
 import server_2026_b.server.service.CrudEmployeeService;
 
 @RestController
@@ -20,6 +21,19 @@ public class CrudEmployeeController {
     public EmployeeListResponse getAllActive(
             @CookieValue(value = "accessToken", required = false) String token) {
         return crudEmployeeService.getAllActive(token);
+    }
+
+    @GetMapping("/employee-by-id")
+    public EmployeeResponse getEmployeeById(
+            @CookieValue(value = "accessToken", required = false) String token,
+            @RequestParam Long employeeId) {
+        return crudEmployeeService.getEmployeeById(token, employeeId);
+    }
+
+    @GetMapping("/all-employees")
+    public EmployeeListResponse getAllEmployee(
+            @CookieValue(value = "accessToken", required = false) String token) {
+        return crudEmployeeService.getAllEmployee(token);
     }
 
     @PostMapping("/create-employee")
