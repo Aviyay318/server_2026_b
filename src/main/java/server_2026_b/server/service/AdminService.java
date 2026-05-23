@@ -80,7 +80,8 @@ public class AdminService {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
         }
         if (isBlank(req.getId()) || // לפי ת״ז כסטרינג במקום יוזרניים
-                isBlank(req.getCompanyName()) ||
+                isBlank(req.getFirstName()) ||
+                isBlank(req.getLastName())  ||
                 isBlank(req.getPassword())) {
             return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
         }
@@ -89,8 +90,8 @@ public class AdminService {
         }
         User employer = new User(
                 req.getId(),
-                req.getCompanyName(),
-                null,
+                req.getFirstName(),
+                req.getLastName(),
                 GenerateHash.hashMd5(req.getId(), req.getPassword()),
                 req.getPhone(),
                 req.getEmail(),
