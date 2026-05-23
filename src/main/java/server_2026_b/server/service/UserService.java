@@ -35,18 +35,18 @@ public class UserService {
     }
 
 
-    public User getUserByUsernameAndPasswordAndType(String username, String hashedPassword,  UserType userType) {
-        if (isMissing(username, hashedPassword)|| userType == null) {
+    public User getUserByPersonalIdAndPasswordAndType(String personalId, String hashedPassword,  UserType userType) {
+        if (isMissing(personalId, hashedPassword)|| userType == null) {
             return null;
         }
-        return userRepository.findUserByUsernamePasswordAndType(username.trim(), hashedPassword.trim(), userType);
+        return userRepository.findUserByPersonalIdPasswordAndType(personalId.trim(), hashedPassword.trim(), userType);
     }
 
 
 
 
-    private boolean isMissing(String username, String password) {
-        return username == null || username.trim().isEmpty()
+    private boolean isMissing(String personalId, String password) {
+        return personalId == null || personalId.trim().isEmpty()
                 || password == null || password.trim().isEmpty();
     }
 

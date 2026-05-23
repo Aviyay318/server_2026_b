@@ -1,18 +1,18 @@
 package server_2026_b.server.requests;
 
 public class LoginRequest {
-    private String username;
+    private String personalId;
     private String password;
 
     public LoginRequest() {
     }
 
-    public String getUsername() {
-        return username;
+    public String getPersonalId() {
+        return personalId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPersonalId(String personalId) {
+        this.personalId = personalId;
     }
 
     public String getPassword() {

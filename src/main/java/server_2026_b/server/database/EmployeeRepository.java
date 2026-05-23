@@ -20,10 +20,10 @@ public class EmployeeRepository {
         this.persist = persist;
     }
 
-    public boolean existsByUsername(String username) {
+    public boolean existsByPersonalId(String personalId) {
         Long count = persist.getQuerySession()
-                .createQuery("SELECT COUNT(u) FROM User u WHERE u.username = :username", Long.class)
-                .setParameter("username", username)
+                .createQuery("SELECT COUNT(u) FROM User u WHERE u.personalId = :personalId", Long.class)
+                .setParameter("personalId", personalId)
                 .uniqueResult();
         return count != null && count > 0;
     }

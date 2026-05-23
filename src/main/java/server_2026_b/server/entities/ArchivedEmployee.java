@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class ArchivedEmployee {
 
     private Long id;
-    private String username;
+    private String personalId;
     private String firstName;
     private String lastName;
     private String password;
@@ -16,9 +16,9 @@ public class ArchivedEmployee {
     private LocalDateTime deletedAt;
     private Long deletedByEmployerId;
 
-    public ArchivedEmployee(Long id, String username, String firstName, String lastName, String password, String phone, String email, UserType userType, LocalDateTime deletedAt, Long deletedByEmployerId) {
+    public ArchivedEmployee(Long id, String personalId, String firstName, String lastName, String password, String phone, String email, UserType userType, LocalDateTime deletedAt, Long deletedByEmployerId) {
         this.id = id;
-        this.username = username;
+        this.personalId = personalId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -34,8 +34,8 @@ public class ArchivedEmployee {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getPersonalId() { return personalId; }
+    public void setPersonalId(String personalId) { this.personalId = personalId; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
