@@ -68,6 +68,16 @@ public class EmployeeRepository {
                 .list();
     }
 
+    public List<User> findAllEmployeesByEmployer(Long employerId) {
+        return persist.getQuerySession()
+                .createQuery(
+                        "SELECT er.employee FROM EmploymentRelation er " +
+                                "WHERE er.employer.id = :eid ", User.class
+                )
+                .setParameter("eid", employerId)
+                .list();
+    }
+
     public void deleteAllRelationsForEmployee(Long employeeId) {
         persist.getQuerySession()
                 .createQuery("DELETE FROM EmploymentRelation er WHERE er.employee.id = :uid")

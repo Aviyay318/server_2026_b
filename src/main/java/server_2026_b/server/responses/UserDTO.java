@@ -3,7 +3,7 @@ package server_2026_b.server.responses;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.utils.UserType;
 
-public class AdminUserDTO {
+public class UserDTO {
     private Long id;
     private String firstName;
     private String lastName;
@@ -11,7 +11,7 @@ public class AdminUserDTO {
     private String phone;
     private UserType userType;
 
-    public AdminUserDTO(User user) {
+    public UserDTO(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

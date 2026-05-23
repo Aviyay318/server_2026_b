@@ -5,9 +5,9 @@ import java.util.List;
 
 public class EmployeeListResponse extends BasicResponse {
 
-    private List<User> employees;
+    private List<UserDTO> employees;
 
-    public EmployeeListResponse(boolean success, List<User> employees) {
+    public EmployeeListResponse(boolean success, List<UserDTO> employees) {
         super(success, null);
         this.employees = employees;
     }
@@ -16,6 +16,6 @@ public class EmployeeListResponse extends BasicResponse {
         super(success, errorCode);
     }
 
-    public List<User> getEmployees() { return employees; }
-    public void setEmployees(List<User> employees) { this.employees = employees; }
+    public List<UserDTO> getEmployees() { return employees; }
+    public void setEmployees(List<UserDTO> employees) { this.employees = employees; }
 }
