@@ -9,6 +9,7 @@ import server_2026_b.server.responses.AdminUserDTO;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.utils.Errors;
 import server_2026_b.server.utils.GenerateHash;
+import server_2026_b.server.utils.IdValidator;
 import server_2026_b.server.utils.UserType;
 
 import java.util.List;
@@ -75,24 +76,27 @@ public class AdminService {
         return s == null || s.trim().isEmpty();
     }
 
-    public BasicResponse createEmployer(String token, CreateEmployerRequest req) { // עם סטרינג ת״ז במקום יוזרניים
+    public BasicResponse createEmployer(String token, CreateEmployerRequest req) {
         if (validateAdmin(token) == null) {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
         }
-        if (isBlank(req.getId()) || // לפי ת״ז כסטרינג במקום יוזרניים
+        if (isBlank(req.getPersonalId()) ||
                 isBlank(req.getFirstName()) ||
                 isBlank(req.getLastName())  ||
                 isBlank(req.getPassword())) {
             return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
         }
-        if (adminRepository.existsById(req.getId())) { // תקבל סטרינג ת״ז במקום יוזרניים
+        if (!IdValidator.checkID(req.getPersonalId()))
+            return new BasicResponse(false, Errors.ERROR_INVALID_ID);
+
+        if (adminRepository.existsByPersonalId(req.getPersonalId())) {
             return new BasicResponse(false, Errors.ERROR_EMPLOYER_ALREADY_EXISTS);
         }
         User employer = new User(
-                req.getId(),
+                req.getPersonalId(),
                 req.getFirstName(),
                 req.getLastName(),
-                GenerateHash.hashMd5(req.getId(), req.getPassword()),
+                GenerateHash.hashMd5(req.getPersonalId(), req.getPassword()),
                 req.getPhone(),
                 req.getEmail(),
                 UserType.EMPLOYER
@@ -101,7 +105,7 @@ public class AdminService {
         return new BasicResponse(true, null);
     }
 
-    public BasicResponse deleteEmployer(String token, String employerId) { // לא לפי id auto increment אלא לפי סטרינג ת״ז
+    public BasicResponse deleteEmployer(String token, long employerId) {
         if (validateAdmin(token) == null) {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
         }
@@ -109,8 +113,8 @@ public class AdminService {
         if (employer == null) {
             return new BasicResponse(false, Errors.ERROR_EMPLOYER_NOT_FOUND);
         }
-        // לא שמים מעסיק בארכיון כי זה רלוונטי רק לעובדים
-        adminRepository.deleteAllRelationsForEmployer(employerId); // פשוט נמחק מיד את כל הקשרים שלו
+
+        adminRepository.deleteAllRelationsForEmployer(employerId);
         adminRepository.deleteEmployer(employer);
         return new BasicResponse(true, null);
     }

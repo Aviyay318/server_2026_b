@@ -41,14 +41,14 @@ public class AdminController {
     @PostMapping("/create-employer")
     public BasicResponse createEmployer(
             @CookieValue(value = "accessToken", required = false) String token,
-            @RequestBody CreateEmployerRequest request) { // מעסיק עם ת״ז כסטרינג
+            @RequestBody CreateEmployerRequest request) {
         return adminService.createEmployer(token, request);
     }
 
     @DeleteMapping("/delete-employer")
     public BasicResponse deleteEmployer(
             @CookieValue(value = "accessToken", required = false) String token,
-            @RequestParam String employerId) { // יקבל ת״ז כסטרינג
+            @RequestParam long employerId) {
         return adminService.deleteEmployer(token, employerId);
     }
 }

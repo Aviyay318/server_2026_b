@@ -1,19 +1,19 @@
 package server_2026_b.server.requests;
 
 public class CreateEmployerRequest {
-    private String id; // במקום יוזרניים
+    private String personalId;
     private String firstName;
     private String lastName;
     private String password;
     private String phone;
     private String email;
 
-    public String getId() {
-        return id;
+    public String getPersonalId() {
+        return personalId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPersonalId(String personalId) {
+        this.personalId = personalId;
     }
 
     public String getFirstName() { return firstName; }

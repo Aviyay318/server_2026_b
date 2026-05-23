@@ -5,6 +5,7 @@ import server_2026_b.server.entities.User;
 import server_2026_b.server.service.Persist;
 import server_2026_b.server.utils.UserType;
 
+import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -73,12 +74,11 @@ public class AdminRepository {
 
     public void saveEmployer(User employer) {persist.save(employer);}
 
-    public User findEmployerById(String employerId) {
-        if (employerId == null) return null;
-        return persist.loadObject(User.class, employerId); // צריך לשנות שהמתודה תקבל סטרינג במקום לונג
+    public User findEmployerById(long employerId) {
+        return persist.loadObject(User.class, employerId);
     }
 
-    public void deleteAllRelationsForEmployer(String employerId) { // לפי סטרינג ת״ז
+    public void deleteAllRelationsForEmployer(long employerId) {
         persist.getQuerySession()
                 .createQuery("DELETE FROM EmploymentRelation er WHERE er.employer.id = :uid")
                 .setParameter("uid", employerId)
@@ -87,5 +87,12 @@ public class AdminRepository {
 
     public void deleteEmployer(User employer) {persist.remove(employer);}
 
-    // לא צריך ארכיון מעסיקים - רלוונטי רק עבור עובדים
+    public boolean existsByPersonalId(String personalId) {
+        Long count = persist.getQuerySession()
+                .createQuery("SELECT count(u) FROM User u WHERE u.personalId = :personalId", Long.class)
+                .setParameter("personalId", personalId)
+                .uniqueResult();
+
+        return count != null && count > 0;
+    }
 }
