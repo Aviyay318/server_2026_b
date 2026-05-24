@@ -15,7 +15,6 @@ public class WorkDayRepository {
 
     private final Persist persist;
 
-
     public WorkDayRepository(Persist persist) {
         this.persist = persist;
     }
@@ -54,18 +53,21 @@ public class WorkDayRepository {
             if (workDay.getStatus() == ShiftStatus.ABSENCE) {
                 continue;
             }
+
             if (workDay.getEnterTime() != null && workDay.getExitTime() != null) {
-                java.util.Calendar cal = java.util.Calendar.getInstance();//ספרייה ששולפת חודש
+                java.util.Calendar cal = java.util.Calendar.getInstance();
                 cal.setTime(workDay.getEnterTime());
-                int workDayMonth = cal.get(java.util.Calendar.MONTH) + 1; //ינואר הוא 0, לכן מוסיפים 1
+
+                int workDayMonth = cal.get(java.util.Calendar.MONTH) + 1;
 
                 if (workDayMonth == month) {
                     long diffInMillis = workDay.getExitTime().getTime() - workDay.getEnterTime().getTime();
-                    double hoursInDay = (double) diffInMillis / 3600000.0;//להפוך ממילי שניות לשעות
+                    double hoursInDay = (double) diffInMillis / 3600000.0;
                     totalHours += hoursInDay;
                 }
             }
         }
+
         return totalHours;
     }
 

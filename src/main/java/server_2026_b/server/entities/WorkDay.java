@@ -3,23 +3,27 @@ package server_2026_b.server.entities;
 import server_2026_b.server.utils.AbsenceReason;
 import server_2026_b.server.utils.ShiftStatus;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class WorkDay {
+
     private Long id;
     private Long userId; // id של עובד
-    private Date enterTime;
-    private Date exitTime;
+    private Timestamp enterTime;
+    private Timestamp exitTime;
     private String enterLocation;
     private String exitLocation;
     private WorkingSite enterSite;
     private WorkingSite exitSite;
     private ShiftStatus status;
     private AbsenceReason absenceReason;
+
     public WorkDay() {
     }
 
-    public WorkDay(Long id, Long userId, Date enterTime, Date exitTime, String enterLocation, String exitLocation, WorkingSite enterSite, WorkingSite exitSite) {
+    public WorkDay(Long id, Long userId, Timestamp enterTime, Timestamp exitTime,
+                   String enterLocation, String exitLocation,
+                   WorkingSite enterSite, WorkingSite exitSite) {
         this.id = id;
         this.userId = userId;
         this.enterTime = enterTime;
@@ -30,7 +34,9 @@ public class WorkDay {
         this.exitSite = exitSite;
     }
 
-    public WorkDay(Long userId, Date enterTime, Date exitTime, String enterLocation, String exitLocation, WorkingSite enterSite, WorkingSite exitSite) {
+    public WorkDay(Long userId, Timestamp enterTime, Timestamp exitTime,
+                   String enterLocation, String exitLocation,
+                   WorkingSite enterSite, WorkingSite exitSite) {
         this.userId = userId;
         this.enterTime = enterTime;
         this.exitTime = exitTime;
@@ -40,7 +46,7 @@ public class WorkDay {
         this.exitSite = exitSite;
     }
 
-    public WorkDay(Long userId, Date enterTime, WorkingSite enterSite, String enterLocation) {
+    public WorkDay(Long userId, Timestamp enterTime, WorkingSite enterSite, String enterLocation) {
         this.userId = userId;
         this.enterTime = enterTime;
         this.enterSite = enterSite;
@@ -63,19 +69,19 @@ public class WorkDay {
         this.userId = userId;
     }
 
-    public Date getEnterTime() {
+    public Timestamp getEnterTime() {
         return enterTime;
     }
 
-    public void setEnterTime(Date enterTime) {
+    public void setEnterTime(Timestamp enterTime) {
         this.enterTime = enterTime;
     }
 
-    public Date getExitTime() {
+    public Timestamp getExitTime() {
         return exitTime;
     }
 
-    public void setExitTime(Date exitTime) {
+    public void setExitTime(Timestamp exitTime) {
         this.exitTime = exitTime;
     }
 

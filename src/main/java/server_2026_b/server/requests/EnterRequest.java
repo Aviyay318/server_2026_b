@@ -1,12 +1,13 @@
 package server_2026_b.server.requests;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class EnterRequest {
+
     private String token;
     private Long siteId;
     private String location;
-    private Date startTime;
+    private Timestamp startTime;
 
     public String getLocation() {
         return location;
@@ -32,11 +33,11 @@ public class EnterRequest {
         this.siteId = siteId;
     }
 
-    public Date getStartTime() {
+    public Timestamp getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(Timestamp startTime) {
         this.startTime = startTime;
     }
 }

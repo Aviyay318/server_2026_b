@@ -1,12 +1,13 @@
 package server_2026_b.server.requests;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class ExitRequest {
+
     private String token;
     private Long siteId;
     private String location;
-    private Date endTime;
+    private Timestamp endTime;
 
     public String getLocation() {
         return location;
@@ -24,11 +25,11 @@ public class ExitRequest {
         this.token = token;
     }
 
-    public Date getEndTime() {
+    public Timestamp getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
     }
 
