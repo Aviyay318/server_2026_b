@@ -155,21 +155,21 @@ public class WorkDayService {
             return new BasicResponse(false, Errors.ERROR_INVALID_ABSENCE_REASON);
         }
 
-        Date now = new Date();
-        WorkDay open = workDayRepository.findOpenByUserId(employee.getId());
-        if (open != null) {
-            open.setStatus(ShiftStatus.ABSENCE);
-            open.setAbsenceReason(request.getReason());
-            open.setExitTime(now);
-            workDayRepository.save(open);
-        } else {
+//        Date now = new Date();
+//        WorkDay open = workDayRepository.findOpenByUserId(employee.getId());
+//        if (open != null) {
+//            open.setStatus(ShiftStatus.ABSENCE);
+//            open.setAbsenceReason(request.getReason());
+//            open.setExitTime(now);
+//            workDayRepository.save(open);
+//        } else {
             WorkDay workDay = new WorkDay();
             workDay.setUserId(employee.getId());
-            workDay.setEnterTime(now);
+            workDay.setEnterTime(request.getDate());
             workDay.setStatus(ShiftStatus.ABSENCE);
             workDay.setAbsenceReason(request.getReason());
             workDayRepository.save(workDay);
-        }
+//        }
         return new BasicResponse(true, null);
     }
 }
