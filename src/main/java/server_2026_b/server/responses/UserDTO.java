@@ -5,6 +5,7 @@ import server_2026_b.server.utils.UserType;
 
 public class UserDTO {
     private Long id;
+    private String personalId;
     private String firstName;
     private String lastName;
     private String email;
@@ -13,6 +14,7 @@ public class UserDTO {
 
     public UserDTO(User user) {
         this.id = user.getId();
+        this.personalId = user.getPersonalId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
@@ -25,6 +27,14 @@ public class UserDTO {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPersonalId() {
+        return personalId;
+    }
+
+    public void setPersonalId(String personalId) {
+        this.personalId = personalId;
     }
 
     public String getFirstName() {

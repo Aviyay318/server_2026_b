@@ -83,22 +83,27 @@ public class CrudEmployeeService {
         return new BasicResponse(true, null);
     }
 
-    public BasicResponse deleteEmployee(String token, Long employeeId) {
+    public BasicResponse deleteEmployee(String token, String personalId) {
         User employer = userService.getEmployerByAccessToken(token);
         if (employer == null)
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
 
-        if (employer.getId().equals(employeeId))
+        if (isBlank(personalId))
+            return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
+
+        if (!IdValidator.checkID(personalId))
+            return new BasicResponse(false, Errors.ERROR_INVALID_ID);
+
+        String normalizedPersonalId = IdValidator.normalize(personalId);
+
+        if (normalizedPersonalId.equals(employer.getPersonalId()))
             return new BasicResponse(false, Errors.ERROR_CANNOT_DELETE_EMPLOYER);
 
-        User employee = employeeRepository.findEmployeeById(employeeId);
+        User employee = employeeRepository.findEmployeeByPersonalId(normalizedPersonalId);
         if (employee == null)
             return new BasicResponse(false, Errors.ERROR_EMPLOYEE_NOT_FOUND);
 
-        if (!IdValidator.checkID(employee.getPersonalId()))
-            return new BasicResponse(false, Errors.ERROR_INVALID_ID);
-
-        EmploymentRelation relation = employeeRepository.findRelation(employer.getId(), employeeId);
+        EmploymentRelation relation = employeeRepository.findRelation(employer.getId(), employee.getId());
         if (relation == null)
             return new BasicResponse(false, Errors.ERROR_NOT_YOUR_EMPLOYEE);
 
@@ -114,7 +119,7 @@ public class CrudEmployeeService {
         archived.setDeletedByEmployerId(employer.getId());
 
         employeeRepository.archiveEmployee(archived);
-        employeeRepository.deleteAllRelationsForEmployee(employeeId);
+        employeeRepository.deleteAllRelationsForEmployee(employee.getId());
         employeeRepository.deleteEmployee(employee);
 
         return new BasicResponse(true, null);

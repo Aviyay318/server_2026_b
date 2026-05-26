@@ -24,7 +24,6 @@ import java.util.List;
 
 @Service
 public class WorkDayService {
-
     private final WorkDayRepository workDayRepository;
     private final UserService userService;
 
@@ -51,15 +50,12 @@ public class WorkDayService {
         }
 
         WorkingSite site = null;
-
         if (request.getSiteId() != null) {
             site = workDayRepository.findSiteById(request.getSiteId());
-
             if (site == null) {
                 return new BasicResponse(false, Errors.ERROR_SITE_NOT_FOUND);
             }
         }
-
         if (site != null && request.getLocation() != null) {
             return new BasicResponse(false, Errors.ERROR_TWO_LOCATIONS_AT_ONCE);
         }
@@ -82,7 +78,6 @@ public class WorkDayService {
 
     public BasicResponse exit(String token, ExitRequest request) {
         User employee = this.userService.getEmployeeByAccessToken(token);
-
         if (employee == null) {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
         }
@@ -101,6 +96,8 @@ public class WorkDayService {
 
         if (request.getSiteId() != null) {
             site = workDayRepository.findSiteById(request.getSiteId());
+        } else {
+            site = null;
         }
 
         if (site != null && request.getLocation() != null) {
@@ -205,7 +202,7 @@ public class WorkDayService {
         } else {
             WorkDay workDay = new WorkDay();
             workDay.setUserId(employee.getId());
-            workDay.setEnterTime(now);
+            workDay.setEnterTime(request.getDate());
             workDay.setStatus(ShiftStatus.ABSENCE);
             workDay.setAbsenceReason(request.getReason());
             workDayRepository.save(workDay);
