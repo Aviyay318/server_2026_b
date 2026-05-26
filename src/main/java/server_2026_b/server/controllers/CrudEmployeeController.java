@@ -46,7 +46,7 @@ public class CrudEmployeeController {
     @DeleteMapping("/delete-employee")
     public BasicResponse deleteEmployee(
             @CookieValue(value = "accessToken", required = false) String token,
-            @RequestParam Long employeeId) {
-        return crudEmployeeService.deleteEmployee(token, employeeId);
+            @RequestParam String personalId) {
+        return crudEmployeeService.deleteEmployee(token, personalId);
     }
 }

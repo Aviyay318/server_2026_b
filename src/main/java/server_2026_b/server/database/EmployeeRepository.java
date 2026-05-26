@@ -41,6 +41,14 @@ public class EmployeeRepository {
         return persist.loadObject(User.class, employeeId);
     }
 
+    public User findEmployeeByPersonalId(String personalId) {
+        if (personalId == null) return null;
+        return persist.getQuerySession()
+                .createQuery("FROM User u WHERE u.personalId = :personalId", User.class)
+                .setParameter("personalId", personalId)
+                .uniqueResult();
+    }
+
     public EmploymentRelation findRelation(Long employerId, Long employeeId) {
         return persist.getQuerySession()
                 .createQuery(
