@@ -11,6 +11,10 @@ public class Errors {
     public static final int ERROR_EMPLOYEE_ALREADY_WORKING = 4000;
     public static final int ERROR_EMPLOYEE_NOT_WORKING = 4001;
     public static final int ERROR_INVALID_ABSENCE_REASON = 4002;
+    public static final int ERROR_NO_EMPLOYER_FOUND = 4003;
+    public static final int ERROR_APPLICATION_NOT_FOUND = 4004;
+    public static final int ERROR_APPLICATION_NOT_YOURS = 4005;
+    public static final int ERROR_APPLICATION_ALREADY_ANSWERED = 4006;
 
     public static final int ERROR_FETCHING_SITES = 5001;
     public static final int ERROR_SITE_NOT_FOUND = 5002;

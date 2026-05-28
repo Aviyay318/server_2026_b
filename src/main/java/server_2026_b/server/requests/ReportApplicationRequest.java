@@ -3,19 +3,10 @@ package server_2026_b.server.requests;
 import server_2026_b.server.utils.AbsenceReason;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
-public class ReportAbsenceRequest {
+public class ReportApplicationRequest {
     private Timestamp date;
     private AbsenceReason reason;
-
-    public AbsenceReason getReason() {
-        return reason;
-    }
-
-    public void setReason(AbsenceReason reason) {
-        this.reason = reason;
-    }
 
     public Timestamp getDate() {
         return date;
@@ -23,5 +14,13 @@ public class ReportAbsenceRequest {
 
     public void setDate(Timestamp date) {
         this.date = date;
+    }
+
+    public AbsenceReason getReason() {
+        return reason;
+    }
+
+    public void setReason(AbsenceReason reason) {
+        this.reason = reason;
     }
 }

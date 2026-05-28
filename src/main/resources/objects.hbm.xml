@@ -121,6 +121,27 @@
         <property name="deletedByEmployerId" column="deleted_by_employer_id" type="long"/>
     </class>
 
+    <class name="server_2026_b.server.entities.Application" table="applications">
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+        <property name="employeeId" column="employee_id" type="java.lang.Long" not-null="true"/>
+        <property name="employerId" column="employer_id" type="java.lang.Long" not-null="true"/>
+        <property name="date" column="date" type="timestamp"/>
+        <property name="reason" column="reason">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.AbsenceReason</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="status" column="status" not-null="true">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">server_2026_b.server.utils.ApplicationStatus</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+    </class>
+
     <class name="server_2026_b.server.entities.Shift" table="shifts">
         <id name="id" column="id" type="java.lang.Long">
             <generator class="identity"/>

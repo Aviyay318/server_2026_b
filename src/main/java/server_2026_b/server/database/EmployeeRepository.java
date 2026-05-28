@@ -61,6 +61,18 @@ public class EmployeeRepository {
                 .uniqueResult();
     }
 
+    public User findEmployerForEmployee(Long employeeId) {
+        if (employeeId == null) return null;
+        return persist.getQuerySession()
+                .createQuery(
+                        "SELECT er.employer FROM EmploymentRelation er WHERE er.employee.id = :uid",
+                        User.class
+                )
+                .setParameter("uid", employeeId)
+                .setMaxResults(1)
+                .uniqueResult();
+    }
+
     public List<User> findActiveEmployeesByEmployer(Long employerId) {
         return persist.getQuerySession()
                 .createQuery(

@@ -7,7 +7,6 @@ import server_2026_b.server.entities.WorkDay;
 import server_2026_b.server.entities.WorkingSite;
 import server_2026_b.server.requests.EnterRequest;
 import server_2026_b.server.requests.ExitRequest;
-import server_2026_b.server.requests.ReportAbsenceRequest;
 import server_2026_b.server.responses.AbsenceReasonsResponse;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.SiteListResponse;
@@ -177,37 +176,5 @@ public class WorkDayService {
         }
 
         return new AbsenceReasonsResponse(true, null, Arrays.asList(AbsenceReason.values()));
-    }
-
-    public BasicResponse reportAbsence(String token, ReportAbsenceRequest request) {
-        User employee = this.userService.getEmployeeByAccessToken(token);
-
-        if (employee == null) {
-            return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
-        }
-
-        if (request == null || request.getReason() == null) {
-            return new BasicResponse(false, Errors.ERROR_INVALID_ABSENCE_REASON);
-        }
-
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-
-        WorkDay open = workDayRepository.findOpenByUserId(employee.getId());
-
-        if (open != null) {
-            open.setStatus(ShiftStatus.ABSENCE);
-            open.setAbsenceReason(request.getReason());
-            open.setExitTime(now);
-            workDayRepository.save(open);
-        } else {
-            WorkDay workDay = new WorkDay();
-            workDay.setUserId(employee.getId());
-            workDay.setEnterTime(request.getDate());
-            workDay.setStatus(ShiftStatus.ABSENCE);
-            workDay.setAbsenceReason(request.getReason());
-            workDayRepository.save(workDay);
-        }
-
-        return new BasicResponse(true, null);
     }
 }
