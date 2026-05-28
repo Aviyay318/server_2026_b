@@ -1,10 +1,12 @@
 package server_2026_b.server.requests;
 
 import server_2026_b.server.utils.AbsenceReason;
+
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReportAbsenceRequest {
-    private Date date;
+    private Timestamp date;
     private AbsenceReason reason;
 
     public AbsenceReason getReason() {
@@ -15,11 +17,11 @@ public class ReportAbsenceRequest {
         this.reason = reason;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 }
