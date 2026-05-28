@@ -29,9 +29,9 @@ public class TestService {
     private final int NUMBER_OF_WORKING_SITES = 3;
 
     public void addData() {
-//        createEmployees();
-//        createEmployers();
-//        createWorkingSites();
+        createEmployees();
+        createEmployers();
+        createWorkingSites();
         createAdmin();
     }
 

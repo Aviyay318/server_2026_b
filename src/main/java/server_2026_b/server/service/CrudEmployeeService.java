@@ -8,6 +8,9 @@ import server_2026_b.server.entities.User;
 import server_2026_b.server.entities.WorkDay;
 import server_2026_b.server.entities.relations.EmploymentRelation;
 import server_2026_b.server.requests.CreateEmployeeRequest;
+import server_2026_b.server.requests.EmployeeDateRequest;
+import server_2026_b.server.responses.ActiveEmployeeDTO;
+import server_2026_b.server.responses.ActiveEmployeeListResponse;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.EmployeeListResponse;
 import server_2026_b.server.responses.EmployeeResponse;
@@ -41,13 +44,55 @@ public class CrudEmployeeService {
                 .collect(Collectors.toList());
     }
 
-    public EmployeeListResponse getAllActive(String token) {
+    public ActiveEmployeeListResponse getAllActive(String token) {
+        User employer = userService.getEmployerByAccessToken(token);
+        if (employer == null)
+            return new ActiveEmployeeListResponse(false, Errors.ERROR_INVALID_TOKEN);
+
+        List<User> active = employeeRepository.findActiveEmployeesByEmployer(employer.getId());
+        List<ActiveEmployeeDTO> result = active.stream()
+                .map(employee -> {
+                    WorkDay workDay = workDayRepository.findOpenByUserId(employee.getId());
+                    String location = null;
+                    if (workDay != null) {
+                        if (workDay.getEnterLocation() != null) {
+                            location = workDay.getEnterLocation();
+                        } else if (workDay.getEnterSite() != null) {
+                            location = workDay.getEnterSite().getName();
+                        }
+                    }
+                    return new ActiveEmployeeDTO(
+                            new UserDTO(employee),
+                            workDay != null ? workDay.getEnterTime() : null,
+                            location
+                    );
+                })
+                .collect(Collectors.toList());
+        return new ActiveEmployeeListResponse(true, result);
+    }
+
+    public EmployeeListResponse getExitedEmployees(String token, EmployeeDateRequest request) {
         User employer = userService.getEmployerByAccessToken(token);
         if (employer == null)
             return new EmployeeListResponse(false, Errors.ERROR_INVALID_TOKEN);
 
-        List<User> active = employeeRepository.findActiveEmployeesByEmployer(employer.getId());
-        return new EmployeeListResponse(true, convertToDtoList(active));
+        if (request == null || request.getDate() == null)
+            return new EmployeeListResponse(false, Errors.ERROR_EMPTY_FIELD);
+
+        List<User> exited = employeeRepository.findExitedEmployeesByEmployerAndDate(employer.getId(), request.getDate());
+        return new EmployeeListResponse(true, convertToDtoList(exited));
+    }
+
+    public EmployeeListResponse getAbsencedEmployees(String token, EmployeeDateRequest request) {
+        User employer = userService.getEmployerByAccessToken(token);
+        if (employer == null)
+            return new EmployeeListResponse(false, Errors.ERROR_INVALID_TOKEN);
+
+        if (request == null || request.getDate() == null)
+            return new EmployeeListResponse(false, Errors.ERROR_EMPTY_FIELD);
+
+        List<User> absenced = employeeRepository.findAbsencedEmployeesByEmployerAndDate(employer.getId(), request.getDate());
+        return new EmployeeListResponse(true, convertToDtoList(absenced));
     }
 
     public BasicResponse createEmployee(String token, CreateEmployeeRequest req) {
