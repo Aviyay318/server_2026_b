@@ -2,6 +2,8 @@ package server_2026_b.server.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import server_2026_b.server.requests.CreateEmployeeRequest;
+import server_2026_b.server.requests.EmployeeDateRequest;
+import server_2026_b.server.responses.ActiveEmployeeListResponse;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.EmployeeListResponse;
 import server_2026_b.server.responses.EmployeeResponse;
@@ -18,9 +20,23 @@ public class CrudEmployeeController {
     }
 
     @GetMapping("/get-all-active")
-    public EmployeeListResponse getAllActive(
+    public ActiveEmployeeListResponse getAllActive(
             @CookieValue(value = "accessToken", required = false) String token) {
         return crudEmployeeService.getAllActive(token);
+    }
+
+    @PostMapping("/exited-employees")
+    public EmployeeListResponse getExitedEmployees(
+            @CookieValue(value = "accessToken", required = false) String token,
+            @RequestBody EmployeeDateRequest request) {
+        return crudEmployeeService.getExitedEmployees(token, request);
+    }
+
+    @PostMapping("/absenced-employees")
+    public EmployeeListResponse getAbsencedEmployees(
+            @CookieValue(value = "accessToken", required = false) String token,
+            @RequestBody EmployeeDateRequest request) {
+        return crudEmployeeService.getAbsencedEmployees(token, request);
     }
 
     @GetMapping("/employee-by-id")

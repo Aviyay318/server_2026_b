@@ -8,6 +8,8 @@ import server_2026_b.server.entities.relations.EmploymentRelation;
 import server_2026_b.server.service.Persist;
 import server_2026_b.server.utils.ShiftStatus;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -111,5 +113,51 @@ public class EmployeeRepository {
 
     public void archiveEmployee(ArchivedEmployee archived) {
         persist.save(archived);
+    }
+
+    public List<User> findExitedEmployeesByEmployerAndDate(Long employerId, Timestamp date) {
+        LocalDate localDate = date.toLocalDateTime().toLocalDate();
+        Timestamp startOfDay = Timestamp.valueOf(localDate.atStartOfDay());
+        Timestamp endOfDay = Timestamp.valueOf(localDate.plusDays(1).atStartOfDay());
+        return persist.getQuerySession()
+                .createQuery(
+                        "SELECT er.employee FROM EmploymentRelation er " +
+                        "WHERE er.employer.id = :eid " +
+                        "AND er.employee.id IN (" +
+                        "   SELECT wd.userId FROM WorkDay wd " +
+                        "   WHERE wd.status = :status " +
+                        "   AND wd.exitTime >= :startOfDay " +
+                        "   AND wd.exitTime < :endOfDay" +
+                        ")",
+                        User.class
+                )
+                .setParameter("eid", employerId)
+                .setParameter("status", ShiftStatus.FINISHED)
+                .setParameter("startOfDay", startOfDay)
+                .setParameter("endOfDay", endOfDay)
+                .list();
+    }
+
+    public List<User> findAbsencedEmployeesByEmployerAndDate(Long employerId, Timestamp date) {
+        LocalDate localDate = date.toLocalDateTime().toLocalDate();
+        Timestamp startOfDay = Timestamp.valueOf(localDate.atStartOfDay());
+        Timestamp endOfDay = Timestamp.valueOf(localDate.plusDays(1).atStartOfDay());
+        return persist.getQuerySession()
+                .createQuery(
+                        "SELECT er.employee FROM EmploymentRelation er " +
+                        "WHERE er.employer.id = :eid " +
+                        "AND er.employee.id IN (" +
+                        "   SELECT wd.userId FROM WorkDay wd " +
+                        "   WHERE wd.status = :status " +
+                        "   AND wd.enterTime >= :startOfDay " +
+                        "   AND wd.enterTime < :endOfDay" +
+                        ")",
+                        User.class
+                )
+                .setParameter("eid", employerId)
+                .setParameter("status", ShiftStatus.ABSENCE)
+                .setParameter("startOfDay", startOfDay)
+                .setParameter("endOfDay", endOfDay)
+                .list();
     }
 }
