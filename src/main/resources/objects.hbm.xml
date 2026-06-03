@@ -156,6 +156,16 @@
                      not-null="false"/>
         <property name="position" column="position" type="string"/>
     </class>
-                     
+
+    <class name="server_2026_b.server.entities.EmployeeConstraint" table="employee_constraints">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="employeeId" column="employee_id" type="string" not-null="true"/>
+        <property name="shiftId" column="shift_id" type="long" not-null="true"/>
+        <property name="available" column="available" type="boolean" not-null="true"/>
+        <property name="comment" column="comment" type="string"/>
+        <property name="date" column="date" type="timestamp" not-null="true"/>
+    </class>
 
 </hibernate-mapping>
