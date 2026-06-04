@@ -1,71 +1,87 @@
 package server_2026_b.server.entities;
+
 import java.util.Date;
 
+// Shift = weekly shift requirement created by employer.
+// This is not the final employee work placement.
+// Actual employee placement will be saved later.
 public class Shift {
+
     private Long id;
-    private Long userId;
+    private Long employerId;
+    private Boolean active;
+    private Integer weekDay;
     private Date startTime;
     private Date endTime;
-    private String location;
-    private WorkingSite workSite;
-    private String position;
+    private Integer employeeAmount;
 
     public Shift() {
     }
 
-    
-    public Shift(Long id, Long userId, Date startTime, Date endTime, String location, WorkingSite workSite, String position) {
+    public Shift(Long id, Long employerId, Boolean active, Integer weekDay,
+                 Date startTime, Date endTime, Integer employeeAmount) {
         this.id = id;
-        this.userId = userId;
+        this.employerId = employerId;
+        this.active = active;
+        this.weekDay = weekDay;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.location = location;
-        this.workSite = workSite;
-        this.position = position;
+        this.employeeAmount = employeeAmount;
     }
 
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
+
+    public Long getEmployerId() {
+        return employerId;
     }
-    public void setUserId(Long userId) {
-        this.userId = userId;
+
+    public void setEmployerId(Long employerId) {
+        this.employerId = employerId;
     }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Integer getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(Integer weekDay) {
+        this.weekDay = weekDay;
+    }
+
     public Date getStartTime() {
         return startTime;
     }
+
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
+
     public Date getEndTime() {
         return endTime;
     }
+
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
-    public String getLocation() {
-        return location;
-    }
-    public void setLocation(String location) {
-        this.location = location;
-    }
-    public WorkingSite getWorkSite() {
-        return workSite;
-    }
-    public void setWorkSite(WorkingSite workSite) {
-        this.workSite = workSite;
-    }
-    public String getPosition() {
-        return position;
-    }
-    public void setPosition(String position) {
-        this.position = position;
+
+    public Integer getEmployeeAmount() {
+        return employeeAmount;
     }
 
-    
+    public void setEmployeeAmount(Integer employeeAmount) {
+        this.employeeAmount = employeeAmount;
+    }
 }
