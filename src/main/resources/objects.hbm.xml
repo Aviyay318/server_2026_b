@@ -156,6 +156,14 @@
                      not-null="false"/>
         <property name="position" column="position" type="string"/>
     </class>
+
+    <class name="server_2026_b.server.entities.EmployerSettings" table="employer_settings">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="employerId" column="employer_id" type="long" not-null="true" unique="true"/>
+        <property name="submissionExpiration" column="submission_expiration" type="java.time.LocalDateTime"/>
+    </class>
                      
 
 </hibernate-mapping>
