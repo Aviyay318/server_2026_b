@@ -146,15 +146,13 @@
         <id name="id" column="id" type="java.lang.Long">
             <generator class="identity"/>
         </id>
-        <property name="userId" column="user_id" type="java.lang.Long" not-null="true"/>
+
+        <property name="employerId" column="employer_id" type="java.lang.Long" not-null="true"/>
+        <property name="active" column="is_active" type="boolean" not-null="true"/>
+        <property name="weekDay" column="week_day" type="integer" not-null="true"/>
         <property name="startTime" column="start_time" type="timestamp" not-null="true"/>
         <property name="endTime" column="end_time" type="timestamp" not-null="true"/>
-        <property name="location" column="location" type="string"/>
-        <many-to-one name="workSite"
-                     class="server_2026_b.server.entities.WorkingSite"
-                     column="worksite_id"
-                     not-null="false"/>
-        <property name="position" column="position" type="string"/>
+        <property name="employeeAmount" column="employee_amount" type="integer" not-null="true"/>
     </class>
 
     <class name="server_2026_b.server.entities.EmployeeConstraint" table="employee_constraints">
