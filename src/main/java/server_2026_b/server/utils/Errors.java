@@ -2,6 +2,7 @@ package server_2026_b.server.utils;
 
 public class Errors {
     public static final int ERROR_INVALID_TOKEN = 2000;
+    public static final int ERROR_UNAUTHORIZED_ACTION = 2001;
 
     public static final int  ERROR_EMPTY_FIELD = 3000;
     public static final int ERROR_WRONG_CREDENTIALS = 3001;
@@ -33,6 +34,9 @@ public class Errors {
     public static final int ERROR_FETCHING_SHIFTS = 7001;
     public static final int ERROR_SHIFT_NOT_FOUND = 7002;
     public static final int ERROR_INVALID_DATE_FORMAT = 7003;
+
+    public static final int ERROR_FETCHING_WORKSHIFTS = 8001;
+    public static final int ERROR_INVALID_WORK_SHIFT_PLACEMENT = 8002;
 
 
     public static final int ERROR_TEST_ADD_DATA_FAILED = 9001;
