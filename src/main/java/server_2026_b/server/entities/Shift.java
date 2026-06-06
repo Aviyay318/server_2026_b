@@ -10,6 +10,7 @@ public class Shift {
     private Long id;
     private Long employerId;
     private Boolean active;
+    private Boolean posted;
     private Integer weekDay;
     private Date startTime;
     private Date endTime;
@@ -19,7 +20,7 @@ public class Shift {
     }
 
     public Shift(Long id, Long employerId, Boolean active, Integer weekDay,
-                 Date startTime, Date endTime, Integer employeeAmount) {
+                 Date startTime, Date endTime, Integer employeeAmount, Boolean posted) {
         this.id = id;
         this.employerId = employerId;
         this.active = active;
@@ -27,6 +28,7 @@ public class Shift {
         this.startTime = startTime;
         this.endTime = endTime;
         this.employeeAmount = employeeAmount;
+        this.posted = posted;
     }
 
     public Long getId() {
@@ -51,6 +53,14 @@ public class Shift {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Boolean getPosted() {
+        return posted;
+    }
+
+    public void setPosted(Boolean posted) {
+        this.posted = posted;
     }
 
     public Integer getWeekDay() {

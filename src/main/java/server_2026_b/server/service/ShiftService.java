@@ -54,7 +54,11 @@ public class ShiftService {
             return new ShiftListResponse(false, Errors.ERROR_INVALID_TOKEN, null);
         }
         List<Shift> shifts = shiftRepository.findAllByEmployerId(employer.getId());
-        return new ShiftListResponse(true, null, shifts);
+        List<Shift> activeShifts = shifts.stream()
+                .filter(shift -> shift.getActive())
+                .toList();
+
+        return new ShiftListResponse(true, null, activeShifts);
     }
 
     public ShiftListResponse postShifts(String accessToken) {
@@ -62,12 +66,11 @@ public class ShiftService {
         if (employer == null) {
             return new ShiftListResponse(false, Errors.ERROR_INVALID_TOKEN, null);
         }
-        List<Shift> shifts = shiftRepository.findAllByEmployerId(employer.getId());
-        for (Shift shift : shifts) {
-            shift.setActive(true);
+        List<Shift> activeShifts = shiftRepository.findActiveByEmployerId(employer.getId());
+        for (Shift shift : activeShifts) {
+            shift.setPosted(true);
             shiftRepository.save(shift);
         }
-        List<Shift> activeShifts = shiftRepository.findActiveByEmployerId(employer.getId());
         return new ShiftListResponse(true, null, activeShifts);
     }
 
@@ -86,7 +89,7 @@ public class ShiftService {
         if (!isShiftBelongsToEmployer(oldShift, employer)) {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
         }
-        Shift newShift = createShiftFromRequest(employer.getId(), request, false);
+        Shift newShift = createShiftFromRequest(employer.getId(), request, true);
         if (newShift == null) {
             return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
         }
@@ -147,7 +150,7 @@ public class ShiftService {
 
             return new Shift(null, employerId, active,
                     request.getWeekDay(), startTime, endTime,
-                    request.getEmployeeAmount()
+                    request.getEmployeeAmount(), false
             );
         } catch (ParseException e) {
             return null;
