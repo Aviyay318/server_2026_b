@@ -146,15 +146,30 @@
         <id name="id" column="id" type="java.lang.Long">
             <generator class="identity"/>
         </id>
-        <property name="userId" column="user_id" type="java.lang.Long" not-null="true"/>
+
+        <property name="employerId" column="employer_id" type="java.lang.Long" not-null="true"/>
+        <property name="active" column="is_active" type="boolean" not-null="true"/>
+        <property name="weekDay" column="week_day" type="integer" not-null="true"/>
         <property name="startTime" column="start_time" type="timestamp" not-null="true"/>
         <property name="endTime" column="end_time" type="timestamp" not-null="true"/>
-        <property name="location" column="location" type="string"/>
-        <many-to-one name="workSite"
-                     class="server_2026_b.server.entities.WorkingSite"
-                     column="worksite_id"
-                     not-null="false"/>
-        <property name="position" column="position" type="string"/>
+        <property name="employeeAmount" column="employee_amount" type="integer" not-null="true"/>
+    </class>
+
+    <class name="server_2026_b.server.entities.EmployeeConstraint" table="employee_constraints">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="employee"
+                     class="server_2026_b.server.entities.User"
+                     column="employee_id"
+                     not-null="false" />
+        <many-to-one name="shift"
+                     class="server_2026_b.server.entities.Shift"
+                     column="shift_id"
+                     not-null="false" />
+        <property name="available" column="available" type="boolean" not-null="true"/>
+        <property name="comment" column="comment" type="string"/>
+        <property name="date" column="date" type="timestamp" not-null="true"/>
     </class>
 
     <class name="server_2026_b.server.entities.EmployerSettings" table="employer_settings">
@@ -164,6 +179,6 @@
         <property name="employerId" column="employer_id" type="long" not-null="true" unique="true"/>
         <property name="submissionExpiration" column="submission_expiration" type="java.time.LocalDateTime"/>
     </class>
-                     
+
 
 </hibernate-mapping>
