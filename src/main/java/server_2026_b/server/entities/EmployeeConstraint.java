@@ -3,18 +3,18 @@ package server_2026_b.server.entities;
 import java.sql.Timestamp;
 
 public class EmployeeConstraint {
-    private long id; // השארתי למקרה שיהיה שימוש בעתיד, יש EmployeeConstraintResponse שמחזיר אובייקט יחיד בלי זה
-    private String employeeId;
-    private long shiftId;
+    private long id;
+    private User employee;
+    private Shift shift;
     private boolean available;
-    private String comment; // גם אם יכול וגם אם לא יכול, לדוגמה: יכול רק עד 12:00
+    private String comment;
     private Timestamp date;
 
     public EmployeeConstraint() {}
 
-    public EmployeeConstraint(String employeeId, long shiftId, boolean available, String comment, Timestamp date) {
-        this.employeeId = employeeId;
-        this.shiftId = shiftId;
+    public EmployeeConstraint(User employee, Shift shift, boolean available, String comment, Timestamp date) {
+        this.employee = employee;
+        this.shift = shift;
         this.available = available;
         this.comment = comment;
         this.date = date;
@@ -28,20 +28,20 @@ public class EmployeeConstraint {
         this.id = id;
     }
 
-    public String getEmployeeId() {
-        return employeeId;
+    public User getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(User employee) {
+        this.employee = employee;
     }
 
-    public long getShiftId() {
-        return shiftId;
+    public Shift getShift() {
+        return shift;
     }
 
-    public void setShiftId(long shiftId) {
-        this.shiftId = shiftId;
+    public void setShift(Shift shift) {
+        this.shift = shift;
     }
 
     public boolean isAvailable() {

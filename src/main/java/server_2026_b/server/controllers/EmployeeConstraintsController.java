@@ -21,9 +21,9 @@ public class EmployeeConstraintsController {
     @PostMapping("/save-constraints")
     public BasicResponse saveConstraints( // שמירת רשימת אילוצים של עובד
                                           @CookieValue(value = "accessToken", required = false) String token,
-                                          @RequestBody List<EmployeeConstraintRequest> requests) { // request = {employee_id, shift_id, available, comment, date} without auto-increment id
+                                          @RequestBody EmployeeConstraintRequest request) { // request = {employee_id, shift_id, available, comment, date} without auto-increment id
         // אבל בדיקה פנימית שהת״ז שמגיע בריקווסט מהלקוח שווה לת״ז העובד לפי הטוקן
-        return employeeConstraintsService.saveConstraints(token, requests); // נכניס את הריקווסטים (אילוצים) עם בדיקת הת״ז עם הטוקן לטבלה
+        return employeeConstraintsService.saveConstraints(token, request); // נכניס את הריקווסטים (אילוצים) עם בדיקת הת״ז עם הטוקן לטבלה
         // יחזיר אם הצליח או נכשל בתוך המתודה בסרוויס
     }
 

@@ -6,6 +6,7 @@ import server_2026_b.server.service.Persist;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -18,18 +19,18 @@ public class EmployeeConstraintsRepository {
         this.persist = persist;
     }
 
-    public boolean constraintExists(String employeeId, long shiftId, Timestamp date) {
+    public boolean constraintExists(String employeePersonalId, long shiftId, Timestamp date) {
         Long count = persist.getQuerySession()
                 .createQuery(
-                        "SELECT COUNT(constraint) FROM EmployeeConstraint constraint " +
-                                "WHERE constraint.employeeId = :employeeId " +
-                                "AND constraint.shiftId = :shiftId " +
-                                "AND constraint.date = :date",
+                        "SELECT COUNT(c) FROM EmployeeConstraint c " +
+                                "WHERE c.employee.personalId = :employeePersonalId " +
+                                "AND c.shift.id = :shiftId " +
+                                "AND c.date = :date",
                         Long.class
                 )
-                .setParameter("employeeId", employeeId)
+                .setParameter("employeePersonalId", employeePersonalId)
                 .setParameter("shiftId", shiftId)
-                .setParameter("date", date)
+                .setParameter("date", date) // Hibernate will happily match Timestamp with type="timestamp"
                 .uniqueResult();
 
         return count != null && count > 0;
@@ -37,6 +38,10 @@ public class EmployeeConstraintsRepository {
 
     public void createConstraint(EmployeeConstraint constraint) {
         persist.save(constraint);
+    }
+
+    public void saveList(List<EmployeeConstraint> employeeConstraintList){
+        persist.saveAll(employeeConstraintList);
     }
 
     public List<EmployeeConstraint> getAllConstraints() {

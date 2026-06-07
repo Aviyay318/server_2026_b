@@ -2,7 +2,10 @@ package server_2026_b.server.service;
 
 import org.springframework.stereotype.Service;
 import server_2026_b.server.database.EmployeeConstraintsRepository;
+import server_2026_b.server.database.EmployeeRepository;
+import server_2026_b.server.database.ShiftRepository;
 import server_2026_b.server.entities.EmployeeConstraint;
+import server_2026_b.server.entities.Shift;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.requests.EmployeeConstraintRequest;
 import server_2026_b.server.responses.BasicResponse;
@@ -10,6 +13,8 @@ import server_2026_b.server.responses.EmployeeConstraintResponse;
 import server_2026_b.server.responses.EmployeeConstraintsResponse;
 import server_2026_b.server.utils.Errors;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,48 +22,55 @@ public class EmployeeConstraintsService {
 
     private final EmployeeConstraintsRepository employeeConstraintsRepository;
     private final UserService userService;
+    private final EmployeeRepository employeeRepository;
+    private final ShiftRepository shiftRepository;
 
-    public EmployeeConstraintsService(EmployeeConstraintsRepository employeeConstraintsRepository, UserService userService) {
+    public EmployeeConstraintsService(EmployeeConstraintsRepository employeeConstraintsRepository, UserService userService, EmployeeRepository employeeRepository, ShiftRepository shiftRepository) {
         this.employeeConstraintsRepository = employeeConstraintsRepository;
         this.userService = userService;
+        this.employeeRepository = employeeRepository;
+        this.shiftRepository = shiftRepository;
     }
 
-    public BasicResponse saveConstraints(String token, List<EmployeeConstraintRequest> requests) { // הוספת רשימת אילוצים של עובד כאילוצים בטבלה
+    public BasicResponse saveConstraints(String token, EmployeeConstraintRequest request) { // הוספת רשימת אילוצים של עובד כאילוצים בטבלה
         try {
             User employee = userService.getEmployeeByAccessToken(token);
             if (employee == null) {
                 return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
             }
-            if (requests == null || requests.isEmpty()) {
+            if (request == null) {
                 return new BasicResponse(false, Errors.ERROR_EMPTY_CONSTRAINTS);
             }
-            for (EmployeeConstraintRequest request : requests) {
-                //  מוודאים שהת״ז שמגיע מהלקוח ב-request תקין
-                if (!request.getEmployeeId().equals(employee.getPersonalId())) {
-                    return new BasicResponse(false, Errors.ERROR_INVALID_ID);
-                }
+            if (employeeRepository.findEmployerForEmployee(employee.getId()) == null){
+                return new BasicResponse(false,Errors.ERROR_EMPLOYER_NOT_FOUND);
+            }
+            List<EmployeeConstraint> employeeConstraintList = new ArrayList<>();
+            Timestamp constraintTimestamp = Timestamp.valueOf(request.getDate());
+            for (EmployeeConstraintRequest.Constraint constraint : request.getConstrains()) {
                 // הגבלת אילוצים - אם קיים כבר אילוץ עבור אותו עובד באותה משמרת באותו היום, לא ניתן לו להוסיף
                 if (employeeConstraintsRepository.constraintExists(
-                        request.getEmployeeId(),
-                        request.getShiftId(),
-                        request.getDate())) {
+                        employee.getPersonalId(),
+                        constraint.getShiftId(),
+                        constraintTimestamp)) {
                     return new BasicResponse(false, Errors.ERROR_CONSTRAINT_ALREADY_EXISTS);
                 }
+                Shift shift = shiftRepository.findById(constraint.getShiftId());
+                if (shift == null){
+                    return new BasicResponse(false,Errors.ERROR_SHIFT_NOT_FOUND);
+                }
+                employeeConstraintList.add(new EmployeeConstraint(
+                                employee,
+                                shift,
+                                constraint.isAvailable(),
+                                constraint.getComment(),
+                                Timestamp.valueOf(request.getDate())
+                        ));
             }
-            // עבור כל אובייקט מהרשימה שהגיעה מהלקוח ניצור אובייקט אילוץ ונכניס אותו לטבלה
-            for (EmployeeConstraintRequest request : requests) {
-                EmployeeConstraint constraint = new EmployeeConstraint(
-                        request.getEmployeeId(),
-                        request.getShiftId(),
-                        request.isAvailable(),
-                        request.getComment(),
-                        request.getDate()
-                );
-                employeeConstraintsRepository.createConstraint(constraint);
-            }
+            employeeConstraintsRepository.saveList(employeeConstraintList);
             return new BasicResponse(true, null);
 
         } catch (Exception e) {
+            System.err.println(e);
             return new BasicResponse(false, Errors.ERROR_SAVE_CONSTRAINTS_FAILED);
         }
     }
@@ -69,13 +81,13 @@ public class EmployeeConstraintsService {
             if (employer == null) {
                 return new EmployeeConstraintsResponse(false, Errors.ERROR_INVALID_TOKEN, null);
             }
+
             List<EmployeeConstraint> dbConstraints = employeeConstraintsRepository.getAllConstraints(); // כל האילוצים
 
-            // כדי לא למחוק את ה-id ב-EmployeeConstraint נחזיר בתגובה הסופית רשימה מסוג האובייקט שבתוך EmployeeConstraintResponse (האילוץ בלי auto id)
             List<EmployeeConstraintResponse> constraints = dbConstraints.stream()
                     .map(constraint -> new EmployeeConstraintResponse(
-                            constraint.getEmployeeId(),
-                            constraint.getShiftId(),
+                            constraint.getEmployee() != null ? constraint.getEmployee().getPersonalId() : null,
+                            constraint.getShift() != null ? constraint.getShift().getId() : 0L,
                             constraint.isAvailable(),
                             constraint.getComment(),
                             constraint.getDate()
@@ -85,6 +97,8 @@ public class EmployeeConstraintsService {
             return new EmployeeConstraintsResponse(true, null, constraints);
 
         } catch (Exception e) {
+            // Pro tip: Print or log your stack trace here so you don't swallow errors blindly!
+            e.printStackTrace();
             return new EmployeeConstraintsResponse(
                     false,
                     Errors.ERROR_GET_CONSTRAINTS_FAILED,
