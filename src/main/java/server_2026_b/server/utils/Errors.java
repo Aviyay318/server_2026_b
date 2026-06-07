@@ -35,9 +35,14 @@ public class Errors {
     public static final int ERROR_SHIFT_NOT_FOUND = 7002;
     public static final int ERROR_INVALID_DATE_FORMAT = 7003;
 
-    public static final int ERROR_FETCHING_WORKSHIFTS = 8001;
-    public static final int ERROR_INVALID_WORK_SHIFT_PLACEMENT = 8002;
+    public static final int ERROR_EMPTY_CONSTRAINTS = 8001;
+    public static final int ERROR_CONSTRAINT_ALREADY_EXISTS = 8002;
+    public static final int ERROR_SAVE_CONSTRAINTS_FAILED = 8003;
+    public static final int ERROR_GET_CONSTRAINTS_FAILED = 8004;
+    public static final int ERROR_CONSTRAINTS_SUBMITTED_AFTER_EXPIRATION = 8005;
 
+    public static final int ERROR_FETCHING_WORKSHIFTS = 8006;
+    public static final int ERROR_INVALID_WORK_SHIFT_PLACEMENT = 8007;
 
     public static final int ERROR_TEST_ADD_DATA_FAILED = 9001;
 }

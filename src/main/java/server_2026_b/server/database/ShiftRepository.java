@@ -1,17 +1,16 @@
 package server_2026_b.server.database;
-import org.springframework.transaction.annotation.Transactional;
-import server_2026_b.server.service.Persist;
+
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import server_2026_b.server.entities.Shift;
-import java.util.Date;
+import server_2026_b.server.service.Persist;
+
 import java.util.List;
 
 @Repository
 @Transactional
 public class ShiftRepository {
-
     private final Persist persist;
-
     public ShiftRepository(Persist persist) {
         this.persist = persist;
     }
@@ -19,15 +18,39 @@ public class ShiftRepository {
     public void save(Shift shift) {
         persist.save(shift);
     }
-    public List<Shift> findShiftsByUserId(long userId,Date fromDate, Date  toDate) {
-        return persist.getQuerySession()
-                .createQuery(
-                    "FROM Shift WHERE userId = :userId AND startTime >= :fromDate AND endTime <= :toDate ORDER BY startTime DESC",
-                    Shift.class)
-                    .setParameter("userId", userId)
-                    .setParameter("fromDate", fromDate)
-                    .setParameter("toDate", toDate)
-                    .list();
+
+    public void saveAll(List<Shift> shifts) {
+        if (shifts == null) {
+            return;
+        }
+        for (Shift shift : shifts) {
+            save(shift);
+        }
     }
-    
+
+    public Shift findById(Long id) {
+        if (id == null) {
+            return null;
+        }
+        return persist.getQuerySession().get(Shift.class, id);
+    }
+
+    public List<Shift> findAllByEmployerId(Long employerId) {
+        return persist.getQuerySession()
+                .createQuery("FROM Shift WHERE employerId = :employerId ORDER BY weekDay, startTime", Shift.class)
+                .setParameter("employerId", employerId).list();
+    }
+
+    public List<Shift> findActiveByEmployerId(Long employerId) {
+        return persist.getQuerySession()
+                .createQuery("FROM Shift WHERE employerId = :employerId AND active = true ORDER BY weekDay, startTime", Shift.class)
+                .setParameter("employerId", employerId).list();
+    }
+
+    public void delete(Shift shift) {
+        if (shift == null) {
+            return;
+        }
+        persist.getQuerySession().delete(shift);
+    }
 }
