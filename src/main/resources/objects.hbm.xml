@@ -179,14 +179,14 @@
         <property name="employerId" column="employer_id" type="long" not-null="true" unique="true"/>
         <property name="submissionExpiration" column="submission_expiration" type="java.time.LocalDateTime"/>
     </class>
-    <class name="server_2026_b.server.entities.WorkShift" table="work_shifts">
-    <id name="id" column="id" type="java.lang.Long">
-        <generator class="identity"/>
-    </id>
-    <property name="employeeId" column="employee_id" type="java.lang.Long" not-null="true"/>
-    <property name="shiftId" column="shift_id" type="java.lang.Long" not-null="true"/>
-    <property name="date" column="date" type="date" not-null="true"/>
-</class>
 
+    <class name="server_2026_b.server.entities.WorkShift" table="work_shifts">
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+        <property name="employeeId" column="employee_id" type="java.lang.Long" not-null="true"/>
+        <property name="shiftId" column="shift_id" type="java.lang.Long" not-null="true"/>
+        <property name="date" column="date" type="date" not-null="true"/>
+    </class>
 
 </hibernate-mapping>

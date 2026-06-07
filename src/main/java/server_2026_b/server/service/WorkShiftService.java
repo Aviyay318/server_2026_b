@@ -86,24 +86,24 @@ public class WorkShiftService {
             return new WorkShiftResponse(false, Errors.ERROR_FETCHING_WORKSHIFTS, null);
         }
     }
-    //נותנת את הסידור עבודה המלא למנהלים אבל מגבילה עובדים לצפייה בלוז שלהם 
-public WorkShiftResponse getPlacementsForEmployee(String token, Long employeeId) {
-    User user = this.userService.getEmployeeByAccessToken(token);
-    if (user == null) {
-        return new WorkShiftResponse(false, Errors.ERROR_INVALID_TOKEN, null);
+        //נותנת את הסידור עבודה המלא למנהלים אבל מגבילה עובדים לצפייה בלוז שלהם
+    public WorkShiftResponse getPlacementsForEmployee(String token, Long employeeId) {
+        User user = this.userService.getEmployeeByAccessToken(token);
+        if (user == null) {
+            return new WorkShiftResponse(false, Errors.ERROR_INVALID_TOKEN, null);
+        }
+        if (employeeId == null) {
+            return new WorkShiftResponse(false, Errors.ERROR_INVALID_WORK_SHIFT_PLACEMENT, null);
+        }
+        if (user.getUserType() == UserType.EMPLOYEE && !user.getId().equals(employeeId)) {
+            return new WorkShiftResponse(false, Errors.ERROR_UNAUTHORIZED_ACTION, null);
+        }
+        try {
+            List<WorkShift> list = workShiftRepository.getByEmployeeId(employeeId);
+            return new WorkShiftResponse(true, null, list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new WorkShiftResponse(false, Errors.ERROR_FETCHING_WORKSHIFTS, null);
+        }
     }
-    if (employeeId == null) {
-        return new WorkShiftResponse(false, Errors.ERROR_INVALID_WORK_SHIFT_PLACEMENT, null);
-    }
-    if (user.getUserType() == UserType.EMPLOYEE && !user.getId().equals(employeeId)) {
-        return new WorkShiftResponse(false, Errors.ERROR_UNAUTHORIZED_ACTION, null);
-    }
-    try {
-        List<WorkShift> list = workShiftRepository.getByEmployeeId(employeeId);
-        return new WorkShiftResponse(true, null, list);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return new WorkShiftResponse(false, Errors.ERROR_FETCHING_WORKSHIFTS, null);
-    }
-}
 }
