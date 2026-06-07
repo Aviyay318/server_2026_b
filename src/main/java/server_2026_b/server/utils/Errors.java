@@ -38,6 +38,8 @@ public class Errors {
     public static final int ERROR_CONSTRAINT_ALREADY_EXISTS = 8002;
     public static final int ERROR_SAVE_CONSTRAINTS_FAILED = 8003;
     public static final int ERROR_GET_CONSTRAINTS_FAILED = 8004;
+    public static final int ERROR_CONSTRAINTS_SUBMITTED_AFTER_EXPIRATION = 8005;
+
 
     public static final int ERROR_TEST_ADD_DATA_FAILED = 9001;
 

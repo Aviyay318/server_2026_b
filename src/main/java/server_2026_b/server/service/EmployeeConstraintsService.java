@@ -3,8 +3,10 @@ package server_2026_b.server.service;
 import org.springframework.stereotype.Service;
 import server_2026_b.server.database.EmployeeConstraintsRepository;
 import server_2026_b.server.database.EmployeeRepository;
+import server_2026_b.server.database.EmployerSettingsRepository;
 import server_2026_b.server.database.ShiftRepository;
 import server_2026_b.server.entities.EmployeeConstraint;
+import server_2026_b.server.entities.EmployerSettings;
 import server_2026_b.server.entities.Shift;
 import server_2026_b.server.entities.User;
 import server_2026_b.server.requests.EmployeeConstraintRequest;
@@ -14,6 +16,7 @@ import server_2026_b.server.responses.EmployeeConstraintsResponse;
 import server_2026_b.server.utils.Errors;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,25 +27,32 @@ public class EmployeeConstraintsService {
     private final UserService userService;
     private final EmployeeRepository employeeRepository;
     private final ShiftRepository shiftRepository;
+    private final EmployerSettingsRepository employerSettingsRepository;
 
-    public EmployeeConstraintsService(EmployeeConstraintsRepository employeeConstraintsRepository, UserService userService, EmployeeRepository employeeRepository, ShiftRepository shiftRepository) {
+    public EmployeeConstraintsService(EmployerSettingsRepository employerSettingsRepository,EmployeeConstraintsRepository employeeConstraintsRepository, UserService userService, EmployeeRepository employeeRepository, ShiftRepository shiftRepository) {
         this.employeeConstraintsRepository = employeeConstraintsRepository;
         this.userService = userService;
         this.employeeRepository = employeeRepository;
         this.shiftRepository = shiftRepository;
+        this.employerSettingsRepository = employerSettingsRepository;
     }
 
-    public BasicResponse saveConstraints(String token, EmployeeConstraintRequest request) { // הוספת רשימת אילוצים של עובד כאילוצים בטבלה
+    public BasicResponse saveConstraints(String token, EmployeeConstraintRequest request) {
         try {
             User employee = userService.getEmployeeByAccessToken(token);
             if (employee == null) {
                 return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
             }
+            User employer = employeeRepository.findEmployerForEmployee(employee.getId());
+            if (employer == null){
+                return new BasicResponse(false, Errors.ERROR_NO_EMPLOYER_FOUND);
+            }
             if (request == null) {
                 return new BasicResponse(false, Errors.ERROR_EMPTY_CONSTRAINTS);
             }
-            if (employeeRepository.findEmployerForEmployee(employee.getId()) == null){
-                return new BasicResponse(false,Errors.ERROR_EMPLOYER_NOT_FOUND);
+            EmployerSettings employerSettings = employerSettingsRepository.findByEmployerId(employer.getId());
+            if (employerSettings.getSubmissionExpiration().isBefore(LocalDateTime.now())){
+                return new BasicResponse(false, Errors.ERROR_CONSTRAINTS_SUBMITTED_AFTER_EXPIRATION);
             }
             List<EmployeeConstraint> employeeConstraintList = new ArrayList<>();
             Timestamp constraintTimestamp = Timestamp.valueOf(request.getDate());
