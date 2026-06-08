@@ -7,7 +7,6 @@ import server_2026_b.server.entities.WorkShift;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.WorkShiftResponse;
 import server_2026_b.server.utils.Errors;
-import server_2026_b.server.utils.UserType;
 
 import java.util.List;
 
@@ -22,15 +21,12 @@ public class WorkShiftService {
         this.userService = userService;
     }
 
+    // Fix #6: was incorrectly calling getEmployeeByAccessToken then rejecting employees.
+    // Now correctly resolves the employer from the token directly.
     public BasicResponse savePlacements(String token, List<WorkShift> placements) {
-        User user = this.userService.getEmployeeByAccessToken(token);
-        if (user == null) {
+        User employer = userService.getEmployerByAccessToken(token);
+        if (employer == null) {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
-        }
-
-        // only managers can save placements, not employees
-        if (user.getUserType() == UserType.EMPLOYEE) {
-            return new BasicResponse(false, Errors.ERROR_UNAUTHORIZED_ACTION);
         }
 
         if (placements == null || placements.isEmpty()) {
@@ -48,15 +44,11 @@ public class WorkShiftService {
         }
     }
 
+    // Fix #6: same correction — employer action must use getEmployerByAccessToken.
     public BasicResponse updatePlacement(String token, WorkShift placement) {
-        User user = this.userService.getEmployeeByAccessToken(token);
-        if (user == null) {
+        User employer = userService.getEmployerByAccessToken(token);
+        if (employer == null) {
             return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
-        }
-
-        // only managers can update placements, not employees
-        if (user.getUserType() == UserType.EMPLOYEE) {
-            return new BasicResponse(false, Errors.ERROR_UNAUTHORIZED_ACTION);
         }
 
         if (placement == null || placement.getId() == null) {
@@ -72,9 +64,10 @@ public class WorkShiftService {
         }
     }
 
+    // Fix #6: same correction — only employers should retrieve all placements.
     public WorkShiftResponse getAllPlacements(String token) {
-        User user = this.userService.getEmployeeByAccessToken(token);
-        if (user == null) {
+        User employer = userService.getEmployerByAccessToken(token);
+        if (employer == null) {
             return new WorkShiftResponse(false, Errors.ERROR_INVALID_TOKEN, null);
         }
 
@@ -86,20 +79,26 @@ public class WorkShiftService {
             return new WorkShiftResponse(false, Errors.ERROR_FETCHING_WORKSHIFTS, null);
         }
     }
-        //נותנת את הסידור עבודה המלא למנהלים אבל מגבילה עובדים לצפייה בלוז שלהם
+
+    // Fix #5: employeeId is now optional. If omitted, it is resolved from the token.
+    // If provided, it must match the token's employee to prevent spoofing.
+    // נותנת את הסידור עבודה המלא לעובד לפי הטוקן שלו, או לפי employeeId אם נשלח (מוגן מפני spoofing)
     public WorkShiftResponse getPlacementsForEmployee(String token, Long employeeId) {
-        User user = this.userService.getEmployeeByAccessToken(token);
-        if (user == null) {
+        User employee = userService.getEmployeeByAccessToken(token);
+        if (employee == null) {
             return new WorkShiftResponse(false, Errors.ERROR_INVALID_TOKEN, null);
         }
-        if (employeeId == null) {
-            return new WorkShiftResponse(false, Errors.ERROR_INVALID_WORK_SHIFT_PLACEMENT, null);
-        }
-        if (user.getUserType() == UserType.EMPLOYEE && !user.getId().equals(employeeId)) {
+
+        // If employeeId was provided, verify it matches the authenticated employee (anti-spoofing)
+        if (employeeId != null && !employee.getId().equals(employeeId)) {
             return new WorkShiftResponse(false, Errors.ERROR_UNAUTHORIZED_ACTION, null);
         }
+
+        // Resolve from token when not provided
+        Long resolvedId = (employeeId != null) ? employeeId : employee.getId();
+
         try {
-            List<WorkShift> list = workShiftRepository.getByEmployeeId(employeeId);
+            List<WorkShift> list = workShiftRepository.getByEmployeeId(resolvedId);
             return new WorkShiftResponse(true, null, list);
         } catch (Exception e) {
             e.printStackTrace();

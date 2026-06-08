@@ -13,6 +13,8 @@ import server_2026_b.server.requests.EmployeeConstraintRequest;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.EmployeeConstraintResponse;
 import server_2026_b.server.responses.EmployeeConstraintsResponse;
+import server_2026_b.server.responses.SettingsResponse;
+import server_2026_b.server.responses.ShiftListResponse;
 import server_2026_b.server.utils.Errors;
 
 import java.sql.Timestamp;
@@ -29,7 +31,7 @@ public class EmployeeConstraintsService {
     private final ShiftRepository shiftRepository;
     private final EmployerSettingsRepository employerSettingsRepository;
 
-    public EmployeeConstraintsService(EmployerSettingsRepository employerSettingsRepository,EmployeeConstraintsRepository employeeConstraintsRepository, UserService userService, EmployeeRepository employeeRepository, ShiftRepository shiftRepository) {
+    public EmployeeConstraintsService(EmployerSettingsRepository employerSettingsRepository, EmployeeConstraintsRepository employeeConstraintsRepository, UserService userService, EmployeeRepository employeeRepository, ShiftRepository shiftRepository) {
         this.employeeConstraintsRepository = employeeConstraintsRepository;
         this.userService = userService;
         this.employeeRepository = employeeRepository;
@@ -44,16 +46,23 @@ public class EmployeeConstraintsService {
                 return new BasicResponse(false, Errors.ERROR_INVALID_TOKEN);
             }
             User employer = employeeRepository.findEmployerForEmployee(employee.getId());
-            if (employer == null){
+            if (employer == null) {
                 return new BasicResponse(false, Errors.ERROR_NO_EMPLOYER_FOUND);
             }
             if (request == null) {
                 return new BasicResponse(false, Errors.ERROR_EMPTY_CONSTRAINTS);
             }
+
+            // Fix #7: guard against missing or unconfigured employer settings (NPE prevention).
+            // Policy: block submission if the employer hasn't set an expiration date yet.
             EmployerSettings employerSettings = employerSettingsRepository.findByEmployerId(employer.getId());
-            if (employerSettings.getSubmissionExpiration().isBefore(LocalDateTime.now())){
+            if (employerSettings == null || employerSettings.getSubmissionExpiration() == null) {
                 return new BasicResponse(false, Errors.ERROR_CONSTRAINTS_SUBMITTED_AFTER_EXPIRATION);
             }
+            if (employerSettings.getSubmissionExpiration().isBefore(LocalDateTime.now())) {
+                return new BasicResponse(false, Errors.ERROR_CONSTRAINTS_SUBMITTED_AFTER_EXPIRATION);
+            }
+
             List<EmployeeConstraint> employeeConstraintList = new ArrayList<>();
             Timestamp constraintTimestamp = Timestamp.valueOf(request.getDate());
             for (EmployeeConstraintRequest.Constraint constraint : request.getConstrains()) {
@@ -65,16 +74,16 @@ public class EmployeeConstraintsService {
                     return new BasicResponse(false, Errors.ERROR_CONSTRAINT_ALREADY_EXISTS);
                 }
                 Shift shift = shiftRepository.findById(constraint.getShiftId());
-                if (shift == null){
-                    return new BasicResponse(false,Errors.ERROR_SHIFT_NOT_FOUND);
+                if (shift == null) {
+                    return new BasicResponse(false, Errors.ERROR_SHIFT_NOT_FOUND);
                 }
                 employeeConstraintList.add(new EmployeeConstraint(
-                                employee,
-                                shift,
-                                constraint.isAvailable(),
-                                constraint.getComment(),
-                                Timestamp.valueOf(request.getDate())
-                        ));
+                        employee,
+                        shift,
+                        constraint.isAvailable(),
+                        constraint.getComment(),
+                        Timestamp.valueOf(request.getDate())
+                ));
             }
             employeeConstraintsRepository.saveList(employeeConstraintList);
             return new BasicResponse(true, null);
@@ -115,5 +124,43 @@ public class EmployeeConstraintsService {
                     null
             );
         }
+    }
+
+    // Fix #3: new method — lets an employee read their employer's submissionExpiration.
+    // Security: only authenticated employees can call this; returns only the expiration date.
+    public SettingsResponse getSettingsForEmployee(String token) {
+        User employee = userService.getEmployeeByAccessToken(token);
+        if (employee == null) {
+            return new SettingsResponse(false, Errors.ERROR_INVALID_TOKEN);
+        }
+        User employer = employeeRepository.findEmployerForEmployee(employee.getId());
+        if (employer == null) {
+            return new SettingsResponse(false, Errors.ERROR_NO_EMPLOYER_FOUND);
+        }
+        EmployerSettings settings = employerSettingsRepository.findByEmployerId(employer.getId());
+        // Return null expiration gracefully — client interprets null as "not configured"
+        if (settings == null) {
+            return new SettingsResponse(true, (java.time.LocalDateTime) null);
+        }
+        return new SettingsResponse(true, settings.getSubmissionExpiration());
+    }
+
+    // Fix #4: new method — lets an employee fetch their employer's published (active + posted) shifts.
+    // Security: employee can only see shifts belonging to their own employer.
+    public ShiftListResponse getPublishedShiftsForEmployee(String token) {
+        User employee = userService.getEmployeeByAccessToken(token);
+        if (employee == null) {
+            return new ShiftListResponse(false, Errors.ERROR_INVALID_TOKEN, null);
+        }
+        User employer = employeeRepository.findEmployerForEmployee(employee.getId());
+        if (employer == null) {
+            return new ShiftListResponse(false, Errors.ERROR_NO_EMPLOYER_FOUND, null);
+        }
+        // findActiveByEmployerId already filters active=true; we additionally filter posted=true
+        List<Shift> publishedShifts = shiftRepository.findActiveByEmployerId(employer.getId())
+                .stream()
+                .filter(shift -> Boolean.TRUE.equals(shift.getPosted()))
+                .toList();
+        return new ShiftListResponse(true, null, publishedShifts);
     }
 }

@@ -149,6 +149,7 @@
 
         <property name="employerId" column="employer_id" type="java.lang.Long" not-null="true"/>
         <property name="active" column="is_active" type="boolean" not-null="true"/>
+        <property name="posted" column="is_posted" type="boolean" not-null="true"/>
         <property name="weekDay" column="week_day" type="integer" not-null="true"/>
         <property name="startTime" column="start_time" type="timestamp" not-null="true"/>
         <property name="endTime" column="end_time" type="timestamp" not-null="true"/>

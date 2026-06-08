@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.*;
 import server_2026_b.server.requests.EmployeeConstraintRequest;
 import server_2026_b.server.responses.BasicResponse;
 import server_2026_b.server.responses.EmployeeConstraintsResponse;
+import server_2026_b.server.responses.SettingsResponse;
+import server_2026_b.server.responses.ShiftListResponse;
 import server_2026_b.server.service.EmployeeConstraintsService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/employee-constraints")
@@ -31,5 +31,19 @@ public class EmployeeConstraintsController {
     public EmployeeConstraintsResponse getAllConstraints( // כל האילוצים עבור המעסיק
                                                           @CookieValue(value = "accessToken", required = false) String token) {
         return employeeConstraintsService.getAllConstraints(token);
+    }
+
+    // Fix #3: employee reads their employer's submissionExpiration (needed for constraint submission screen)
+    @GetMapping("/get-settings")
+    public SettingsResponse getSettingsForEmployee(
+            @CookieValue(value = "accessToken", required = false) String token) {
+        return employeeConstraintsService.getSettingsForEmployee(token);
+    }
+
+    // Fix #4: employee reads their employer's published shifts (active + posted) for constraint form
+    @GetMapping("/get-published-shifts")
+    public ShiftListResponse getPublishedShiftsForEmployee(
+            @CookieValue(value = "accessToken", required = false) String token) {
+        return employeeConstraintsService.getPublishedShiftsForEmployee(token);
     }
 }

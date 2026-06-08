@@ -41,7 +41,7 @@ public class WorkShiftController {
     @GetMapping("/get-for-employee")
     public WorkShiftResponse getPlacementsForEmployee(
             @CookieValue(value = "accessToken", required = false) String token,
-            @RequestParam Long employeeId) {
+            @RequestParam(required = false) Long employeeId) {
         return workShiftService.getPlacementsForEmployee(token, employeeId);
     }
 }
