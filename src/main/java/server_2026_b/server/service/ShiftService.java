@@ -38,7 +38,7 @@ public class ShiftService {
         }
         List<Shift> shifts = new ArrayList<>();
         for (ShiftRequest shiftRequest : request.getShifts()) {
-            Shift shift = createShiftFromRequest(employer.getId(), shiftRequest, false);
+            Shift shift = createShiftFromRequest(employer.getId(), shiftRequest, true);
             if (shift == null) {
                 return new BasicResponse(false, Errors.ERROR_EMPTY_FIELD);
             }
